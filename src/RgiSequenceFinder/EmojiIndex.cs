@@ -84,5 +84,9 @@ namespace RgiSequenceFinder
         public override int GetHashCode() => _value.GetHashCode();
         public static bool operator ==(EmojiIndex x, EmojiIndex y) => x.Equals(y);
         public static bool operator !=(EmojiIndex x, EmojiIndex y) => !x.Equals(y);
+
+        public override string ToString() => _value < 0
+            ? char.ConvertFromUtf32(~_value)
+            : _value.ToString();
     }
 }
