@@ -33,7 +33,7 @@ namespace RgiSequenceFinder
                         // - ZWJ で分割して再検索
                         // - FE0F(異体字セレクター16)を消してみて再検索
                         // - 1F3FB～1F3FF (肌色選択)を消してみて再検索 + 肌色自体の絵
-                        var written = SplitZqjSequence(emoji.ZwjPositions, span, indexes);
+                        var written = SplitZwjSequence(emoji.ZwjPositions, span, indexes);
 
                         return (emoji.LengthInUtf16, written);
                     }
@@ -108,7 +108,7 @@ namespace RgiSequenceFinder
         /// さすがに <see cref="Find(ReadOnlySpan{char}, Span{int})"/> からの再起は要らないと思う。たぶん。
         /// <see cref="FindOther(ReadOnlySpan{char})"/> しか見ないので、国旗 + ZWJ とかは受け付けない。
         /// </remarks>
-        private static int SplitZqjSequence(ZwjSplitResult zwjPositions, ReadOnlySpan<char> s, Span<EmojiIndex> indexes)
+        private static int SplitZwjSequence(ZwjSplitResult zwjPositions, ReadOnlySpan<char> s, Span<EmojiIndex> indexes)
         {
             var totalWritten = 0;
             var prevPos = 0;
