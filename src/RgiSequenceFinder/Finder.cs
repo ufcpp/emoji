@@ -23,12 +23,17 @@ namespace RgiSequenceFinder
         /// <param name="destination">
         /// 置換結果の書き込み先。
         /// たぶん、現実装だと<paramref name="source"/>の<see cref="string.Length"/>を超えることないはず。
+        ///
+        /// ※元の文字列と長さを合わせたく、ゼロ幅スペースで埋めることにしたので、
+        /// <paramref name="fillsZwsp"/> true 指定の時、
+        /// <paramref name="source"/> とピッタリ長さ一致するはず。
         /// </param>
+        /// <param name="fillsZwsp">true なら、外字への置き換えによって元の文字よりも短くなる時、ゼロ幅スペースで埋めることで文字列長を保つ。</param>
         /// <returns>
         /// <paramref name="destination"/> に書き込んだ文字列長。
         /// ただし、<paramref name="source"/> と1文字も変更がなかった場合は0を返す。
         /// </returns>
-        public static int Replace(ReadOnlySpan<char> source, Span<char> destination)
+        public static int Replace(ReadOnlySpan<char> source, Span<char> destination, bool fillsZwsp = true)
         {
             const char StartChar = '\uE000'; // private use area の先頭文字。
 
@@ -70,6 +75,15 @@ namespace RgiSequenceFinder
                         else
                         {
                             charWritten += index.WriteUtf16(destination);
+                        }
+                    }
+
+                    if (fillsZwsp)
+                    {
+                        // 元のシーケンスと文字数を合わせるためにゼロ幅スペース埋めるという非常手段。
+                        for (; charWritten < read; charWritten++)
+                        {
+                            destination[charWritten] = '\u200B';
                         }
                     }
                 }

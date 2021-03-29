@@ -114,12 +114,21 @@ namespace RgiSequenceFinder.Test
             var cat = sb.ToString().AsSpan();
 
             var buffer = new char[cat.Length];
-            var written = Finder.Replace(cat, buffer);
+            var written = Finder.Replace(cat, buffer, false);
 
             foreach (var c in buffer[..written])
             {
                 Assert.True(c is 'a' or (>= '\uE000' and < '\uF900'));
             }
+
+            // ゼロ幅スペース埋め版
+            written = Finder.Replace(cat, buffer, true);
+
+            foreach (var c in buffer[..written])
+            {
+                Assert.True(c is 'a' or (>= '\uE000' and < '\uF900') or '\u200B');
+            }
+            Assert.Equal(cat.Length, written);
         }
 
         [Theory]
