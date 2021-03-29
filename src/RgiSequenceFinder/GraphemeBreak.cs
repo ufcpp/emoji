@@ -54,7 +54,7 @@ namespace RgiSequenceFinder
             if (!CanBePictgraphic(s[0])) return EmojiSequence.NotEmoji;
 
             // RI 国旗。
-            if (RegionalIndicator.Create(s) is { First: not 0 } r) return new(r);
+            if (RegionalIndicator.Create(s) is { Value: not 0 } r) return new(r);
 
             // Tag 国旗。
             var (tagCount, tags) = TagSequence.FromFlagSequence(s);

@@ -31,11 +31,11 @@ namespace RgiSequenceFinder.Test
             var count = 0;
             foreach (var s in Data.RgiEmojiSequenceList)
             {
-                if (RegionalIndicator.Create(s) is { First: not 0 } r)
+                if (RegionalIndicator.Create(s) is { Value: not 0 } r)
                 {
                     ++count;
-                    Assert.True(r.First is >= (byte)'A' and <= (byte)'Z');
-                    Assert.True(r.Second is >= (byte)'A' and <= (byte)'Z');
+                    Assert.True(r.First is >= 'A' and <= 'Z');
+                    Assert.True(r.Second is >= 'A' and <= 'Z');
                 }
             }
 

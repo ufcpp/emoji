@@ -57,8 +57,8 @@ namespace RgiSequenceFinder
 
                         if (i < 0)
                         {
-                            indexes[0] = new((char)emoji.Region.First);
-                            if (indexes.Length > 1) indexes[1] = new((char)emoji.Region.Second);
+                            indexes[0] = new(emoji.Region.First);
+                            if (indexes.Length > 1) indexes[1] = new(emoji.Region.Second);
                             return (4, 2);
                         }
 
