@@ -130,18 +130,11 @@ namespace RgiSequenceFinder
 
         private static void WriteSkinTones(StreamWriter writer, int[] skinToneIndexes)
         {
-            writer.Write(@"        private static readonly int[] _skinToneIndexes = { ");
+            writer.Write(@"        private const int _skinToneFirstIndex = ");
+            writer.Write(skinToneIndexes[0]);
+            writer.Write(@";
 
-            foreach (var index in skinToneIndexes)
-            {
-                writer.Write(index);
-                writer.Write(", ");
-            }
-
-
-            writer.Write(@"};
-
-        private static int FindSkinTone(SkinTone skinTone) => _skinToneIndexes[(int)skinTone];
+        private static int FindSkinTone(SkinTone skinTone) => _skinToneFirstIndex + (int)skinTone;
 
 ");
         }

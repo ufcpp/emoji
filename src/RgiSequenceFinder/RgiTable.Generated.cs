@@ -53,9 +53,9 @@ namespace RgiSequenceFinder
             _ => -1,
         };
 
-        private static readonly int[] _skinToneIndexes = { 651, 652, 653, 654, 655, };
+        private const int _skinToneFirstIndex = 651;
 
-        private static int FindSkinTone(SkinTone skinTone) => _skinToneIndexes[(int)skinTone];
+        private static int FindSkinTone(SkinTone skinTone) => _skinToneFirstIndex + (int)skinTone;
 
         private static CharDictionary[,] _singularTable = new CharDictionary[,]
         {

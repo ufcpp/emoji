@@ -59,6 +59,13 @@ namespace EmojiData
         }
 
         /// <summary>
+        /// skin tone かどうか。
+        /// </summary>
+        public static bool IsSkinTone(Rune[] seq) =>
+            seq.Length == 1
+            && seq[0].Value is >= 0x1F3FB and <= 0x1F3FF;
+
+        /// <summary>
         /// RGI に使われてる符号点の分布確認。
         /// </summary>
         public static void CountRunes(Rune[][] emojiSequenceList)
@@ -413,6 +420,28 @@ namespace EmojiData
             {
                 var (_, index) = flags[i];
                 Debug.Assert(128 <= index && index < 256 + 128);
+            }
+        }
+
+        /// <summary>
+        /// <see cref="IsSkinTone(Rune[])"/> は emoji-data 上連番で並んでるはず。
+        /// その確認が取れたらテーブル引き要らなくなるので。
+        /// </summary>
+        public static void SkinToneIndex(Rune[][] emojiSequenceList)
+        {
+            var tones = emojiSequenceList
+                .Select((r, i) => (r, i))
+                .Where(t => IsSkinTone(t.r))
+                .ToArray();
+
+            var minRune = tones.Min(t => t.r[0].Value);
+            var minIndex = tones.Min(t => t.i);
+
+            for (int i = 0; i < tones.Length; i++)
+            {
+                var (rune, index) = tones[i];
+                Debug.Assert(rune[0].Value - minRune == i);
+                Debug.Assert(index - minIndex == i);
             }
         }
     }

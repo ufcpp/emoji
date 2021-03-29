@@ -19,6 +19,7 @@ var unvariedEmojiSequenceList = EmojiSequence.EnumerateUnvariedRgiEmojiSequence(
 //Inspector.GraphemeBreak(emojiSequenceList);
 //Inspector.Compare(emojiSequenceList, unvariedEmojiSequenceList); return;
 //Inspector.FlagIndex(emojiSequenceList); return;
+//Inspector.SkinToneIndex(emojiSequenceList); return;
 
 //SourceGenerator.WriteLineTest(emojiSequenceList);
 SourceGenerator.WriteRgiEmojiSequenceList(emojiSequenceList, "RgiList.cs");
