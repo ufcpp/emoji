@@ -62,28 +62,47 @@ namespace RgiSequenceFinder
 
         private static void WriteRegionFlags(StreamWriter writer, List<(RegionalIndicator code, int index)> regionFlags)
         {
-            writer.Write(@"        private static readonly CharDictionary _regionTable = new(1024,
-            new ushort[] { ");
+            var dic = regionFlags.ToDictionary(t => (int)t.code.Value, t => t.index);
 
-            foreach (var (code, _) in regionFlags)
-            {
-                writer.Write("0x");
-                writer.Write(code.Value.ToString("X2"));
-                writer.Write(", ");
-            }
-            writer.Write(@"},
-            new ushort[] { ");
+            writer.Write(@"        private static System.ReadOnlySpan<byte> _regionTable1 => new byte[] { ");
 
-            foreach (var (_, index) in regionFlags)
+            for (int i = 0; i < 26 * 13; i++)
             {
+                var index = dic.TryGetValue(i + 1, out var v) ? v : 0;
                 writer.Write(index);
                 writer.Write(", ");
             }
 
-            writer.Write(@"});
-");
+            writer.Write(@"};
+        private static System.ReadOnlySpan<byte> _regionTable2 => new byte[] { ");
 
-            writer.Write(@"        private static int FindRegion(RegionalIndicator region) => _regionTable.TryGetValue(region.Value, out var v) ? v : -1;
+            for (int i = 0; i < 26 * 13; i++)
+            {
+                var index = dic.TryGetValue(i + 1 + 26 * 13, out var v) ? v - 128 : 0;
+                writer.Write(index);
+                writer.Write(", ");
+            }
+
+            writer.Write(@"};
+
+        private static int FindRegion(RegionalIndicator region)
+        {
+            var v = (ushort)(region.Value - 1);
+            if (v >= 26 * 26) return -1;
+
+            if (v < 13 * 26)
+            {
+                var i = _regionTable1[v];
+                if (i == 0) return -1;
+                else return i;
+            }
+            else
+            {
+                var i = _regionTable2[v - 13 * 26];
+                if (i == 0) return -1;
+                else return i + 128;
+            }
+        }
 
 ");
         }

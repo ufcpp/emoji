@@ -11,7 +11,7 @@ namespace RgiSequenceFinder
     /// 国旗は Regional Indicator っていう A～Z に相当する特殊記号26文字があって、それ2個(固定長)の組み合わせで表現されてる。
     /// 原理上26×26が上限(これよりも複雑な国旗は emoji tag sequence っていう別の仕様を使って表現することになってる)。
     ///
-    /// 結局、A-Z を 0～25 扱いして、first +* 26 + second + 1 の 1～677 の値を ushort で持つ作りにした。
+    /// 結局、A-Z を 0～25 扱いして、first * 26 + second + 1 の 1～676 の値を ushort で持つ作りにした。
     /// +1 してるのは「emoji flag sequence じゃなかったときに 0 を返す」仕様にするため。
     /// </remarks>
     public readonly struct RegionalIndicator

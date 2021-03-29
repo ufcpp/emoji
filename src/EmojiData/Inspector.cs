@@ -377,5 +377,43 @@ namespace EmojiData
                 ++unvariedIndex;
             }
         }
+
+        /// <summary>
+        /// <see cref="IsFlagSequence(Rune[])"/> なやつのインデックスを byte[] で記録できるかどうかの確認。
+        /// </summary>
+        /// <remarks>
+        /// Unicode に入ってる <see cref="IsFlagSequence(Rune[])"/> な国旗絵文字の数、258個のはず。
+        /// emoji-data 上は 31 からの258個。
+        ///
+        /// (大きく変動することはないはず。
+        /// 国または地域コードの変動が起こりえるとしたら新国家樹立みたいな時だけだし、
+        /// Unicode 的にはそういう地政学に巻き込まれたくないので今後旗が増えるとしたら tag sequence を使いたがると思う。)
+        ///
+        /// 256 をギリギリ超えちゃってるのでそのままだと byte に収まらないけど、
+        /// 「前半・後半に分けて、後半は 128 引く」とかで byte に収められるはず。
+        /// と言うのの確認。
+        /// </remarks>
+        public static void FlagIndex(Rune[][] emojiSequenceList)
+        {
+            var flags = emojiSequenceList
+                .Select((r, i) => (r, i))
+                .Where(t => IsFlagSequence(t.r))
+                .ToArray();
+
+            var halfLen = flags.Length / 2;
+
+            int i = 0;
+            for (; i < halfLen; i++)
+            {
+                var (_, index) = flags[i];
+                Debug.Assert(index < 256);
+            }
+
+            for (; i < flags.Length; i++)
+            {
+                var (_, index) = flags[i];
+                Debug.Assert(128 <= index && index < 256 + 128);
+            }
+        }
     }
 }
