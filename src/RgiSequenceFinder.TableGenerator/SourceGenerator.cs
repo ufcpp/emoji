@@ -62,35 +62,28 @@ namespace RgiSequenceFinder
 
         private static void WriteRegionFlags(StreamWriter writer, List<(RegionalIndicator code, int index)> regionFlags)
         {
-            writer.Write(@"        private static int FindRegion(RegionalIndicator region) => region.First switch
-        {
-");
+            writer.Write(@"        private static readonly CharDictionary _regionTable = new(1024,
+            new ushort[] { ");
 
-            foreach (var g in regionFlags.GroupBy(x => x.code.First))
+            foreach (var (code, _) in regionFlags)
             {
-                writer.Write("            (byte)'");
-                writer.Write((char)g.Key);
-                writer.Write(@"' => region.Second switch
+                writer.Write("0x");
+                writer.Write(code.Value.ToString("X2"));
+                writer.Write(", ");
+            }
+            writer.Write(@"},
+            new ushort[] { ");
+
+            foreach (var (_, index) in regionFlags)
             {
-");
-
-                foreach (var (ri, index) in g)
-                {
-                    writer.Write("                (byte)'");
-                    writer.Write((char)ri.Second);
-                    writer.Write("' => ");
-                    writer.Write(index);
-                    writer.Write(@",
-");
-                }
-
-                writer.Write(@"                _ => -1,
-            },
-");
+                writer.Write(index);
+                writer.Write(", ");
             }
 
-            writer.Write(@"            _ => -1,
-        };
+            writer.Write(@"});
+");
+
+            writer.Write(@"        private static int FindRegion(RegionalIndicator region) => _regionTable.TryGetValue(region.Value, out var v) ? v : -1;
 
 ");
         }
