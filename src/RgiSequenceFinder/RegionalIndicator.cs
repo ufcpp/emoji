@@ -33,8 +33,6 @@ namespace RgiSequenceFinder
         public char First => (char)('A' + (Value - 1) / NumLatinAlphabet);
         public char Second => (char)('A' + (Value - 1) % NumLatinAlphabet);
 
-        public void Deconstruct(out char first, out char second) => (first, second) = (First, Second);
-
         /// <summary>
         /// 「国旗じゃなかった」判定結果に 0, 0 の値を使う。
         /// </summary>
@@ -80,8 +78,7 @@ namespace RgiSequenceFinder
 
         public override string ToString()
         {
-            var (f, s) = this;
-            return $"{f}{s}";
+            return $"{First}{Second}";
         }
     }
 }
