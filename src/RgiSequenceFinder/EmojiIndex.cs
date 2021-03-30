@@ -28,7 +28,7 @@ namespace RgiSequenceFinder
 
         public EmojiIndex(int index) => _value = index;
 
-        public static implicit operator EmojiIndex(int index) => new(index);
+        public static implicit operator EmojiIndex(int index) => new EmojiIndex(index);
 
         public EmojiIndex(char c) => _value = ~c;
 
@@ -80,7 +80,7 @@ namespace RgiSequenceFinder
         }
 
         public bool Equals(EmojiIndex other) => _value == other._value;
-        public override bool Equals(object? obj) => obj is EmojiIndex other && Equals(other);
+        public override bool Equals(object obj) => obj is EmojiIndex other && Equals(other);
         public override int GetHashCode() => _value.GetHashCode();
         public static bool operator ==(EmojiIndex x, EmojiIndex y) => x.Equals(y);
         public static bool operator !=(EmojiIndex x, EmojiIndex y) => !x.Equals(y);

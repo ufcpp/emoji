@@ -45,7 +45,8 @@ namespace RgiSequenceFinder
             // パフォーマンス用。 empty 時に early return。
             if (s.Length == 0) return default;
 
-            if (Keycap.Create(s) is { Value: not 0 } key) return new(key);
+            var key = Keycap.Create(s);
+            if (key.Value != 0) return new EmojiSequence(key);
 
             // パフォーマンス用。keycap 以外に ASCII 出てこないので ASCII 用 fast path。
             if (s[0] < 0x80) return EmojiSequence.NotEmoji;
@@ -54,11 +55,12 @@ namespace RgiSequenceFinder
             if (!CanBePictgraphic(s[0])) return EmojiSequence.NotEmoji;
 
             // RI 国旗。
-            if (RegionalIndicator.Create(s) is { Value: not 0 } r) return new(r);
+            var r = RegionalIndicator.Create(s);
+            if (r.Value != 0) return new EmojiSequence(r);
 
             // Tag 国旗。
             var (tagCount, tags) = TagSequence.FromFlagSequence(s);
-            if (tagCount != 0) return new(tagCount, tags);
+            if (tagCount != 0) return new EmojiSequence(tagCount, tags);
 
             var (count, zwjs) = IsZwjSequence(s);
 
@@ -72,11 +74,11 @@ namespace RgiSequenceFinder
                 var st = IsSkinTone(s);
                 if (st >= 0)
                 {
-                    return new(count, st);
+                    return new EmojiSequence(count, st);
                 }
             }
 
-            return new(count, zwjs);
+            return new EmojiSequence(count, zwjs);
         }
 
         /// <summary>
@@ -107,7 +109,7 @@ namespace RgiSequenceFinder
         {
             if (s.Length < 2) return SkinTone.None;
 
-            if (s[0] == 0xD83C && s[1] is >= (char)0xDFFB and <= (char)0xDFFF)
+            if (s[0] == 0xD83C && s[1] >= (char)0xDFFB && s[1] <= (char)0xDFFF)
             {
                 return (SkinTone)(s[1] - 0xDFFB);
             }
@@ -157,7 +159,7 @@ namespace RgiSequenceFinder
         /// <summary>
         /// BMP 内で Extended_Pictographic 候補になる文字。
         /// </summary>
-        private static bool CanBePictgraphicBmp(char c) => c is (> (char)0x200D and < (char)0x3300) or '©' or '®';
+        private static bool CanBePictgraphicBmp(char c) => (c > (char)0x200D && c < (char)0x3300) || c == '©' || c == '®';
 
         /// <summary>
         /// <see cref="GetEmojiSequence(ReadOnlySpan{char})"/> の主要処理。
@@ -217,7 +219,7 @@ namespace RgiSequenceFinder
                 else break;
             }
 
-            return (count, new(zwjPositions, new(tone1, tone2)));
+            return (count, new ZwjSplitResult(zwjPositions, new SkinTonePair(tone1, tone2)));
         }
     }
 }

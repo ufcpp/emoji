@@ -71,9 +71,9 @@ namespace RgiSequenceFinder
             if (!isRegionalIndicatorLowSurrogate(s[1])) return Invalid;
             if (!isRegionalIndicatorLowSurrogate(s[3])) return Invalid;
 
-            return new(s[1], s[3]);
+            return new RegionalIndicator(s[1], s[3]);
 
-            static bool isRegionalIndicatorLowSurrogate(char c) => c is >= (char)0xDDE6 and <= (char)0xDDFF;
+            bool isRegionalIndicatorLowSurrogate(char c) => c >= (char)0xDDE6 && c <= (char)0xDDFF;
         }
 
         public override string ToString()

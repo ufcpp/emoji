@@ -44,10 +44,10 @@ namespace RgiSequenceFinder
         /// </remarks>
         public ulong LongValue => BinaryPrimitives.ReadUInt64LittleEndian(this.AsSpan());
 
-        public readonly byte this[int index] => this.AsReadOnlySpan()[index];
+        public byte this[int index] => this.AsReadOnlySpan()[index];
 
         public bool Equals(Byte8 other) => LongValue == other.LongValue;
-        public override bool Equals(object? obj) => obj is Byte8 other && Equals(other);
+        public override bool Equals(object obj) => obj is Byte8 other && Equals(other);
         public override int GetHashCode() => LongValue.GetHashCode();
         public static bool operator ==(Byte8 x, Byte8 y) => x.Equals(y);
         public static bool operator !=(Byte8 x, Byte8 y) => !x.Equals(y);

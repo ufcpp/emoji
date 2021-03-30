@@ -57,8 +57,8 @@ namespace RgiSequenceFinder
 
                         if (i < 0)
                         {
-                            indexes[0] = new(emoji.Region.First);
-                            if (indexes.Length > 1) indexes[1] = new(emoji.Region.Second);
+                            indexes[0] = new EmojiIndex(emoji.Region.First);
+                            if (indexes.Length > 1) indexes[1] = new EmojiIndex(emoji.Region.Second);
                             return (4, 2);
                         }
 
@@ -177,7 +177,7 @@ namespace RgiSequenceFinder
                 {
                     // ZWJ 分割後に RGI になってる部分があるので再検索。
                     // 最初にやった「ZWJ 分割のついでに skin tone 記録」も使えないので作り直す。
-                    var i = FindOther(s.Slice(0, firstChar + 2), new(st, SkinTone.None));
+                    var i = FindOther(s.Slice(0, firstChar + 2), new SkinTonePair(st, SkinTone.None));
 
                     if (i >= 0)
                     {
@@ -237,13 +237,13 @@ namespace RgiSequenceFinder
             {
                 // 不正な UTF-16 の時どうしよう。例外の方がいい？
                 if (s.Length < 2 || !char.IsLowSurrogate(s[1]))
-                    return new('\0');
+                    return new EmojiIndex('\0');
 
-                return new(s[0], s[1]);
+                return new EmojiIndex(s[0], s[1]);
             }
             else
             {
-                return new(s[0]);
+                return new EmojiIndex(s[0]);
             }
         }
 
@@ -251,7 +251,7 @@ namespace RgiSequenceFinder
         {
             var (singular, c) = GetSingularTable(s);
 
-            if (singular is not null) return singular.TryGetValue(c, out var v) ? v : -1;
+            if (singular != null) return singular.TryGetValue(c, out var v) ? v : -1;
 
             if (skinTones.Length > 0) return FindeOtherWithSkinTone(s, skinTones);
             else return _otherTable.TryGetValue(s, out var v) ? v.index : -1;
@@ -287,9 +287,9 @@ namespace RgiSequenceFinder
         /// <summary>
         /// 1文字だけとか「1文字 + FE0F」の絵文字は特別扱いして char キーの辞書を作ってるので、そっちを引けるかの判定。
         /// </summary>
-        private static (CharDictionary? singular, char c) GetSingularTable(ReadOnlySpan<char> s)
+        private static (CharDictionary singular, char c) GetSingularTable(ReadOnlySpan<char> s)
         {
-            CharDictionary? singular = null;
+            CharDictionary singular = null;
             char c = '\0';
 
             if (s.Length == 1)
@@ -332,17 +332,18 @@ namespace RgiSequenceFinder
             var t1 = (int)tone1;
             var t2 = (int)tone2;
 
-            return type switch
+            switch (type)
             {
                 // skin tone 1つ持ち
-                1 => t1 + 1,
+                case 1: return t1 + 1;
                 // skin tone 2つ持ち(2人家族系)
-                2 => 5 * t1 + t2 + 1,
+                case 2: return 5 * t1 + t2 + 1;
                 // 👫👬👭 用特殊処理
-                3 => t1 == t2
+                case 3: return t1 == t2
                     ? t1 + 1
-                    : 4 * t1 + t2 - (t1 < t2 ? 1 : 0) + 6,
-                _ => 0, // 来ないはずだけど
+                    : 4 * t1 + t2 - (t1 < t2 ? 1 : 0) + 6;
+                // 来ないはずだけど
+                default: return 0;
             };
         }
     }

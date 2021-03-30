@@ -29,7 +29,7 @@ namespace RgiSequenceFinder
 
         public ulong LongValue => _bytes.LongValue;
         public bool Equals(TagSequence other) => _bytes == other._bytes;
-        public override bool Equals(object? obj) => obj is TagSequence other && Equals(other);
+        public override bool Equals(object obj) => obj is TagSequence other && Equals(other);
         public override int GetHashCode() => _bytes.GetHashCode();
         public static bool operator ==(TagSequence x, TagSequence y) => x.Equals(y);
         public static bool operator !=(TagSequence x, TagSequence y) => !x.Equals(y);
@@ -84,9 +84,9 @@ namespace RgiSequenceFinder
 
             // 🏴 だけあって Tag が付いてないときと、🏴 もない時の区別は多分要らないと思う。
             // 1F3F4-200D-2620-FE0F (海賊旗)みたいな文字があるけど、それは ZWJ シーケンス判定の方で拾う。
-            return (i, new(tags));
+            return (i, new TagSequence(tags));
 
-            static bool isTagLowSurrogate(char c) => c is >= (char)0xDC00 and <= (char)0xDC7F;
+            bool isTagLowSurrogate(char c) => c >= (char)0xDC00 && c <= (char)0xDC7F;
         }
 
         /// <summary>
@@ -106,7 +106,7 @@ namespace RgiSequenceFinder
 
             tagsSpan[i] = 0x7F;
 
-            return new(tags);
+            return new TagSequence(tags);
         }
 
         public static string ToString(Byte8 tags)
@@ -118,7 +118,7 @@ namespace RgiSequenceFinder
 
             foreach (var c in span)
             {
-                if (c is 0x7f or 0) break;
+                if (c == 0x7f || c == 0) break;
                 sb.Append((char)c);
             }
             return sb.ToString();

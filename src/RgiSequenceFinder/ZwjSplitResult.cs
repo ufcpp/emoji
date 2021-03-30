@@ -21,6 +21,6 @@
 
         public byte this[int index] => _bytes[index];
 
-        public SkinTonePair SkinTones => new(_bytes.V7);
+        public SkinTonePair SkinTones => new SkinTonePair(_bytes.V7);
     }
 }

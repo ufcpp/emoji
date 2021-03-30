@@ -30,8 +30,8 @@ namespace RgiSequenceFinder
             // variation selector-16
             if (s[1] != 0xFE0F) return default;
 
-            return s[0] is (>= '0' and <= '9') or '#' or '*' ? new(s[0]) : default;
-
+            var c = s[0];
+            return (c >= '0' && c <= '9') || c == '#' || c == '*' ? new Keycap(s[0]) : default;
         }
 
         public override string ToString() => ((char)Value).ToString();

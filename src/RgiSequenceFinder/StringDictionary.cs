@@ -55,7 +55,7 @@ namespace RgiSequenceFinder
         private readonly string _concatinatedString;
         private readonly Bucket[] _buckets = new Bucket[Capacity];
 
-        private StringDictionary() { _concatinatedString = null!; }
+        private StringDictionary() { _concatinatedString = null; }
 
         public StringDictionary(string concatinatedString, ReadOnlySpan<byte> lengths, ReadOnlySpan<ushort> indexes, ReadOnlySpan<byte> types)
         {
