@@ -1,24 +1,35 @@
-## emoji-data 読み
+# 絵文字関連
 
-RGI (Recommended for General Interchange、最低限表示できるべきとされている候補)の絵文字シーケンスについて調べもの。
-https://github.com/iamcal/emoji-data の emoji.json の中身を眺めてみてるコード。
 調査用なので結構適当。
 
-RGI 絵文字シーケンスだけに絞れば [UAX #29](https://unicode.org/reports/tr29/) ほど真面目に書記素判定やらないでよさそう。
+色々確認取った結果は[ドキュメント](docs/)に残してる。
 
-- keycaps と国旗だけ特殊なので先に判定
-- それを除けば、    
-  - Extended_Pictographic は以下の4つで代用できそう
-    - 0xA9 (copyright マーク)
-    - 0xAE (registered マーク)
-    - `> 0x200D and < 0x3300` (Shift JIS 由来の絵文字が大体この辺り。途中にちょっと漢字が混ざってるのでそこは除外してもいいかも)
-    - 1F000 台 (キャリア絵文字の辺り。今後絵文字が追加されるとしたら多分全部ここ)
-  - Extend は以下の2つしか出てこない
-    - 0xFE0F (異体字セレクター16)
-    - `>= 0x1F3FB and <= 0x1F3FF` (skin tone、肌色セレクター5文字)
+## emoji-data 読み
 
-本来の Extended_Pictographic よりもだいぶ多いけど大は小を兼ねるので大丈夫(RGI 判定はテーブルを引くしかないので、テーブルにないものは無視するだけ)。
+[src/EmojiData](src/EmojiData)
 
-本来の Extend には他に Nonspacing Mark とかが含まれるけど、絵文字と混ぜてちゃんとレンダリングできる気しないので無視でいいと思う。
+https://github.com/iamcal/emoji-data の emoji.json の中身を眺めてみてるコード。
 
-see also: https://gist.github.com/ufcpp/e5c2450a7e99175aeb49a184e9e8d50e
+この emoji-data は、UCD を元に、RGI な絵文字をスプライトシート化 & 何行何列目にどの絵文字の画像が入ってるかを所定の形式の JSON にまとめてくれてるリポジトリ。
+
+UCD 内にも [emoji-data.txt](https://www.unicode.org/Public/UCD/latest/ucd/emoji/emoji-data.txt) ってファイルがあって紛らわしいので、emoji.json って(拡張子を付けて)呼ぶようにしてる。
+
+## RgiSequenceFinder.TableGenerator
+
+[RgiSequenceFinder.TableGenerator](https://github.com/ufcpp/emoji/tree/main/src/RgiSequenceFinder.TableGenerator)
+
+JSON を読んで、string キーで辞書を引くみたいな処理がやりたくなくて、C# バイナリ化(`byte[]` とか `ushort[]` とかの定数が入った C# ソースコード生成)をしてる。
+
+今、律儀に文字列比較をしてるけど、事前に計算したハッシュ値だけのテーブルでもいいかも。
+[書記素判定](docs/grapheme-breaking.md)を受ける文字列で32ビットのハッシュ値が被ることもそうそうないと思うので。
+
+## RgiSequenceFinder
+
+[RgiSequenceFinder](https://github.com/ufcpp/emoji/tree/main/src/RgiSequenceFinder)
+
+上記テーブルを使って RGI 絵文字シーケンスを特定するライブラリ。
+
+emoji.json の並び通りのインデックス番号を返す。
+
+「`string` を読んで `string` を返したい」みたいな場面もあるので、RGI 絵文字シーケンスを U+E000 から始まる外字領域(private use area)にマッピングするみたいなメソッドもある。
+あと、その前後で文字列長が変わって欲しくないみたいな場面もあったので、「外字への置き換えで縮んだ分はゼロ幅スペース(U+200B)で埋める」みたいなオプションもある。
