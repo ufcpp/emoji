@@ -40,22 +40,25 @@ namespace RgiSequenceFinder
 
         private static void WriteKeycaps(StreamWriter writer, List<(Keycap key, int index)> keycaps)
         {
-            writer.Write(@"        private static int FindKeycap(Keycap key) => key.Value switch
+            writer.Write(@"        private static int FindKeycap(Keycap key)
         {
+            switch (key.Value)
+            {
 ");
 
             foreach (var (key, index) in keycaps)
             {
-                writer.Write("            (byte)'");
+                writer.Write("                case (byte)'");
                 writer.Write((char)key.Value);
-                writer.Write("' => ");
+                writer.Write("': return ");
                 writer.Write(index);
-                writer.Write(@",
+                writer.Write(@";
 ");
             }
 
-            writer.Write(@"            _ => -1,
-        };
+            writer.Write(@"                default: return -1;
+            }
+        }
 
 ");
         }
@@ -109,21 +112,24 @@ namespace RgiSequenceFinder
 
         private static void WriteTagFlags(StreamWriter writer, List<(TagSequence tag, int index)> tagFlags)
         {
-            writer.Write(@"        private static int FindTag(TagSequence tags) => tags.LongValue switch
+            writer.Write(@"        private static int FindTag(TagSequence tags)
         {
+            switch (tags.LongValue)
+            {
 ");
             foreach (var (tags, index) in tagFlags)
             {
-                writer.Write("            0x");
+                writer.Write("                case 0x");
                 writer.Write(tags.LongValue.ToString("X"));
-                writer.Write("UL => ");
+                writer.Write("UL: return ");
                 writer.Write(index);
-                writer.Write(@",
+                writer.Write(@";
 ");
             }
 
-            writer.Write(@"            _ => -1,
-        };
+            writer.Write(@"                default: return -1;
+            }
+        }
 
 ");
         }
@@ -168,7 +174,7 @@ namespace RgiSequenceFinder
                         bits = bits <= 7 ? bits + 2 : bits + 1;
                         var capacity = 1 << bits;
 
-                        writer.Write(@"                new(");
+                        writer.Write(@"                new CharDictionary(");
                         writer.Write(capacity);
                         writer.Write(@",
                     new ushort[] { ");
@@ -200,7 +206,7 @@ namespace RgiSequenceFinder
 ");
 
 
-            writer.Write(@"        private static StringDictionary _otherTable = new(
+            writer.Write(@"        private static StringDictionary _otherTable = new StringDictionary(
             """);
 
             foreach (var (s, _, _) in others)
