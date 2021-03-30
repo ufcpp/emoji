@@ -34,3 +34,20 @@
 「最低限どの環境でもこのシーケンスに対応することを推奨する」っていう絵文字シーケンスが決まっていて RGI (Recommended for General Interchange)って呼ばれてる。
 
 - [Recommended for General Interchange](rgi.md)
+
+## RGI 絵文字シーケンスの表示
+
+Windows は RGI にない組み合わせでも頑張って肌色を特殊処理してる。例えば、👩🏻‍👩🏿‍👧🏼‍👧🏾 (たぶん、Windows 以外では 👩🏻 👩🏿 👧🏼 👧🏾 の4文字で表示されるはずだけど、Windows ではちゃんと家族絵文字1文字になる)とかは符号点を並べると 1F469 1F3FB 200D 1F469 1F3FF 200D 1F467 1F3FC 200D 1F467 1F3FE になってる。
+
+OS のテキストレンダリングのレベルでならこういう対応もできるものの、絵文字の自前処理が必要になったときにそこまでできることはまずない。
+大体は RGI 絵文字シーケンス1個1個に画像を用意して、その画像に置き換えて表示することに。
+Twitter とか Facebook とかが自前の絵文字を表示する際にはそんな感じのことをしてるはず。
+
+RGI に入っている絵文字シーケンスは Unicode 13.0 時点で3300文字だし、
+バージョンアップの際に追加される数も最近は 数十個/年 程度に落ち着いてる。
+当面の余裕を見るにしても4・5000文字くらいを想定しておけばたぶん大丈夫。
+
+このくらいなら[符号点をそのまま(ハイフン区切りとかで)画像ファイル名](https://github.com/iamcal/emoji-data/tree/master/img-twitter-64)にしたり、
+[愚直に `string` キーのリスト](https://github.com/iamcal/emoji-data/blob/master/emoji.json)にしたりでもなんとかなる。
+
+処理の都合上、`string` で閉じて(`string` 引数で渡して `string` 戻り値を返す)処理したいこともあるけど、4・5000文字なら U+E000～F8FF の[外字領域](http://www.asahi-net.or.jp/~ax2s-kmtn/ref/unicode/private.html)(6400文字)に置換とかで処理できそう。
