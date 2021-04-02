@@ -72,7 +72,7 @@ namespace RgiSequenceFinder
             if (count == 2)
             {
                 var st = IsSkinTone(s);
-                if (st >= 0)
+                if (st > 0)
                 {
                     return new EmojiSequence(count, st);
                 }
@@ -111,7 +111,7 @@ namespace RgiSequenceFinder
 
             if (s[0] == 0xD83C && s[1] >= (char)0xDFFB && s[1] <= (char)0xDFFF)
             {
-                return (SkinTone)(s[1] - 0xDFFB);
+                return (SkinTone)(s[1] - 0xDFFB + 1);
             }
 
             return SkinTone.None;
@@ -189,7 +189,7 @@ namespace RgiSequenceFinder
                 while (true)
                 {
                     var skinTone = IsSkinTone(s);
-                    if (skinTone >= 0)
+                    if (skinTone > 0)
                     {
                         if (zwjIndex == 0) tone1 = skinTone;
                         else tone2 = skinTone;

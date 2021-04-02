@@ -140,7 +140,7 @@ namespace RgiSequenceFinder
             writer.Write(skinToneIndexes[0]);
             writer.Write(@";
 
-        private static int FindSkinTone(SkinTone skinTone) => _skinToneFirstIndex + (int)skinTone;
+        private static int FindSkinTone(SkinTone skinTone) => _skinToneFirstIndex + (int)skinTone - 1;
 
 ");
         }

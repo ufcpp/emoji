@@ -128,7 +128,7 @@ namespace RgiSequenceFinder.TableGenerator
                         regionFlags.Add((emoji.Region, data[i].index));
                         break;
                     case EmojiSequenceType.SkinTone:
-                        skinTones[(int)emoji.SkinTone] = data[i].index;
+                        skinTones[(int)emoji.SkinTone - 1] = data[i].index;
                         break;
                     case EmojiSequenceType.Tag:
                         tagFlags.Add((emoji.Tags, data[i].index));

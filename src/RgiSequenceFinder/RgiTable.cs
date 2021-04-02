@@ -173,7 +173,7 @@ namespace RgiSequenceFinder
             if (s.Length >= firstChar + 2)
             {
                 var st = GraphemeBreak.IsSkinTone(s.Slice(firstChar));
-                if (st >= 0)
+                if (st > 0)
                 {
                     // ZWJ 分割後に RGI になってる部分があるので再検索。
                     // 最初にやった「ZWJ 分割のついでに skin tone 記録」も使えないので作り直す。
@@ -335,13 +335,13 @@ namespace RgiSequenceFinder
             switch (type)
             {
                 // skin tone 1つ持ち
-                case 1: return t1 + 1;
+                case 1: return t1;
                 // skin tone 2つ持ち(2人家族系)
-                case 2: return 5 * t1 + t2 + 1;
+                case 2: return 5 * t1 + t2 - 5;
                 // 👫👬👭 用特殊処理
                 case 3: return t1 == t2
-                    ? t1 + 1
-                    : 4 * t1 + t2 - (t1 < t2 ? 1 : 0) + 6;
+                    ? t1
+                    : 4 * t1 + t2 - (t1 < t2 ? 1 : 0) + 1;
                 // 来ないはずだけど
                 default: return 0;
             };

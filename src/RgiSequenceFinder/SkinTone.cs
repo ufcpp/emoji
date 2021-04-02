@@ -22,19 +22,21 @@
     /// </remarks>
     public enum SkinTone : sbyte
     {
-        Type2,
+        /// <summary>
+        /// 構造体にぎちぎちにパッキングしたいことがあるので <see cref="System.Nullable{T}"/> を避けて、「skin tone が見つからなかった時は0」みたいな運用する。
+        /// </summary>
+        None = 0,
+
+        // 残りは 1 からの連番。
+        Type2 = 1,
         Type3,
         Type4,
         Type5,
         Type6,
-
-        /// <summary>
-        /// 構造体にぎちぎちにパッキングしたいことがあるので <see cref="System.Nullable{T}"/> を避けて、「skin tone が見つからなかった時は負」みたいな運用する。
-        /// </summary>
-        None = -1,
     }
 
     /// <summary>
+    /// RGI 判定において、
     /// <see cref="SkinTone"/> 0～2個詰め込んだ構造体。
     /// </summary>
     /// <remarks>
@@ -45,7 +47,17 @@
     /// - RGI ZWJ sequence 中にある skin tone は1個か2個
     /// みたいな前提があるし、他のデータと一緒に1つの構造体にパッキングするんで1バイトに2 <see cref="SkinTone"/> を詰め込むことに。
     ///
-    /// 長さ(0, 1, 2) 2ビット、2個目の tone 3ビット、1個目の tone 3ビットでパッキング。
+    /// あと、RGI 判定の際に FE0F を無視する(含んでいたら削る)って処理もしたいけど、
+    /// 削る処理が必要かどうかを2度手間で探索したくないのでこの構造体に一緒に記録する。
+    /// skin tone と FE0F の判定は常に近い位置にある(grapheme breaking の仕様上、同じ Extend っていうくくりになってる)ので。
+    ///
+    /// ビットの使い方(上位ビットから順に):
+    /// - 1ビット: FE0F を含むかどうか
+    /// - 1ビット: 未使用
+    /// - 3ビット: tone2 + 1
+    /// - 3ビット: tone1 + 1
+    ///
+    /// tone を +1 してるのは、「付いていないときに 0」になるようにして長さを別途持たなくてもよくしてる。
     /// </remarks>
     public readonly struct SkinTonePair
     {
@@ -55,23 +67,9 @@
 
         public SkinTonePair(SkinTone tone1, SkinTone tone2)
         {
-            if (tone1 < 0)
-            {
-                Value = 0;
-            }
-            else if (tone2 < 0)
-            {
-                Value = (byte)(
-                    0b0100_0000
-                    | (byte)tone1);
-            }
-            else
-            {
-                Value = (byte)(
-                    0b1000_0000
-                    | (byte)tone1
-                    | ((byte)tone2 << 3));
-            }
+            // tone がない時 -1 が来る前提。
+            // -2 とかみたいなのが来ると処理が狂う。
+            Value = (byte)((byte)tone1 | ((byte)tone2 << 3));
         }
 
         /// <summary>
@@ -80,7 +78,10 @@
         /// <remarks>
         /// この構造体が default のときに 0 になるようにしてある。
         /// </remarks>
-        public int Length => Value >> 6;
+        public int Length =>
+            Value > 0b111 ? 2 :
+            Value > 0 ? 1 :
+            0;
 
         /// <summary>
         /// <see cref="SkinTone"/> 1個目。
