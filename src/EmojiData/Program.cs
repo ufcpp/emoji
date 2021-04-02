@@ -1,6 +1,8 @@
 ﻿using EmojiData;
 using System.Linq;
 
+//HashCode.CheckHashCollision(); return;
+
 //var json = await Loader.LoadStringAsync();
 //RegexChecker.CountImages(json);
 
