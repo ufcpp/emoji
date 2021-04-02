@@ -9,6 +9,7 @@ using System.Text;
 //RgiSequenceFinder.TableGenerator.Experimental.HashCode.CollisionCount(); return;
 //RgiSequenceFinder.TableGenerator.Experimental.SingularEmoji.CheckCount(); return;
 //RgiSequenceFinder.TableGenerator.Experimental.SingularEmoji.CollisionCount(); return;
+//RgiSequenceFinder.TableGenerator.Experimental.Compaction.CheckConversion(); return;
 
 var emojis = GroupedEmojis.Create();
 
