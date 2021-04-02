@@ -65,6 +65,8 @@ namespace EmojiData
             }
         }
 
+        // holding hands 系絵文字。
+        // Unicode 13.1 だと kiss と couple with heart もこのパターンになってそう。
         private static readonly Rune[] replace1F46B = new[] { 0x1F469, 0x200D, 0x1F91D, 0x200D, 0x1F468 }.Select(x => new Rune(x)).ToArray();
         private static readonly Rune[] replace1F46C = new[] { 0x1F468, 0x200D, 0x1F91D, 0x200D, 0x1F468 }.Select(x => new Rune(x)).ToArray();
         private static readonly Rune[] replace1F46D = new[] { 0x1F469, 0x200D, 0x1F91D, 0x200D, 0x1F469 }.Select(x => new Rune(x)).ToArray();
@@ -145,6 +147,10 @@ namespace EmojiData
                 }
                 else if (count == 25)
                 {
+                    // gender neutral の 🧑‍🤝‍🧑 (people hoding hands) とかだけっぽい。
+                    // Unicode 13.0 だと people hoding hands のみ。
+                    // 13.1 だと kiss と couple with heart も。
+
                     if (runes.Length >= 2 && runes[1].Value == 0xFE0F)
                     {
                         yield return (runes, index, 2);
