@@ -177,7 +177,7 @@ namespace RgiSequenceFinder
                 {
                     // ZWJ 分割後に RGI になってる部分があるので再検索。
                     // 最初にやった「ZWJ 分割のついでに skin tone 記録」も使えないので作り直す。
-                    var i = FindOther(s.Slice(0, firstChar + 2), new SkinTonePair(st, SkinTone.None));
+                    var i = FindOther(s.Slice(0, firstChar + 2), new SkinTonePair(false, st, SkinTone.None));
 
                     if (i >= 0)
                     {
