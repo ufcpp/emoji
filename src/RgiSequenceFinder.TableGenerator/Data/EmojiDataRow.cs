@@ -10,7 +10,7 @@ namespace RgiSequenceFinder.TableGenerator
     public class EmojiDataRow
     {
         public string Utf16 { get; }
-        public bool HasSkinVariation { get; }
+        public int SkinVariation { get; }
 
         private ushort[] _emojiStr;
         private ushort[]? _varEmojiStr;
@@ -21,9 +21,9 @@ namespace RgiSequenceFinder.TableGenerator
         public EmojiString VariantEmojiString => new(_varEmojiStr);
         public ReadOnlySpan<Rune> Utf32 => _utf32;
 
-        public EmojiDataRow(Rune[] utf32, bool hasSkinVariation, Rune[]? varUtf32 = null)
+        public EmojiDataRow(Rune[] utf32, int skinVariation, Rune[]? varUtf32 = null)
         {
-            HasSkinVariation = hasSkinVariation;
+            SkinVariation = skinVariation;
             _utf32 = utf32;
 
             Span<char> buffer = stackalloc char[Math.Max(utf32.Length, varUtf32?.Length ?? 0) * 2];
@@ -60,7 +60,7 @@ namespace RgiSequenceFinder.TableGenerator
 
                 if (!elem.TryGetProperty("skin_variations", out var skinVariations))
                 {
-                    yield return new(runes, false);
+                    yield return new(runes, 0);
                     ++index;
                     continue;
                 }
@@ -68,7 +68,7 @@ namespace RgiSequenceFinder.TableGenerator
                 var count = skinVariations.EnumerateObject().Count();
                 if (count == 5)
                 {
-                    yield return new(runes, true);
+                    yield return new(runes, 1);
                     index += 6;
                 }
                 else if (count == 25)
@@ -82,7 +82,7 @@ namespace RgiSequenceFinder.TableGenerator
                         variantRunes = parseUnified(variant.Value);
                     }
 
-                    yield return new(runes, true, variantRunes);
+                    yield return new(runes, 2, variantRunes);
 
                     //todo: holding hands 系特殊対応。
                     // varEmojiStr 取得

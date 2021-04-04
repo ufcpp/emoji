@@ -24,7 +24,7 @@ namespace RgiSequenceFinder.TableGenerator.Experimental
                 w.Write(r.Utf16);
 
                 w.Write(", ");
-                w.Write(r.HasSkinVariation ? "t" : "f");
+                w.Write(r.SkinVariation);
 
                 w.Write(",");
                 foreach (var c in r.Utf32)
