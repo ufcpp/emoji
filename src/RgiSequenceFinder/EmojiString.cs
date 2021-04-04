@@ -27,6 +27,8 @@ namespace RgiSequenceFinder
 
         public EmojiString(ReadOnlySpan<ushort> data) => _data = data;
 
+        public ReadOnlySpan<ushort> Raw => _data;
+
         /// <summary>
         /// ハッシュ値計算用の素数列。
         /// </summary>
@@ -39,7 +41,7 @@ namespace RgiSequenceFinder
         /// </remarks>
         private static ReadOnlySpan<byte> Primes => new byte[] { 1, 83, 223, 227, 131, 53, 149, 227, 229, 7, 23, 5, 47, 59, 53, 3 };
 
-        private const int Diff = 0x1F000 + 0x1000;
+        private const int Diff = 0x1F000 - 0x1000;
         private const int MinSkinTone = 0x1F3FB - Diff;
         private const int MaxSkinTone = 0x1F3FF - Diff;
 
@@ -95,9 +97,12 @@ namespace RgiSequenceFinder
 
             foreach (var c in utf32)
             {
-                if (c == '\uFE0F' || c == '\u200D' || (c >= MinSkinTone && c <= MaxSkinTone)) continue;
+                if (c == '\uFE0F' || c == '\u200D') continue;
 
                 var c1 = c >= 0x10000 ? c - Diff : c;
+
+                if (c1 >= MinSkinTone && c1 <= MaxSkinTone) continue;
+
                 emoji[i++] = (ushort)c1;
             }
 
