@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace EmojiData
 {
-    class Loader
+    public class Loader
     {
         const string EmojiDataSourceUrl = "https://github.com/iamcal/emoji-data/raw/master/emoji.json";
         const string CacheFileName = "emoji.json";
