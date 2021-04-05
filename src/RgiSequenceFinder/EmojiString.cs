@@ -75,7 +75,7 @@ namespace RgiSequenceFinder
                 else if (char.IsLowSurrogate(c))
                 {
                     var c1 = Convert(high, c);
-                    if (c1 >= MinSkinTone && c <= MaxSkinTone) continue;
+                    if (c1 >= MinSkinTone && c1 <= MaxSkinTone) continue;
                     emoji[i++] = c1;
                 }
                 else emoji[i++] = c;
