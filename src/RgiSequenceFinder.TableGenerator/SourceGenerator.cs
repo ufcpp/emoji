@@ -10,8 +10,10 @@ namespace RgiSequenceFinder.TableGenerator
     {
         private static StreamWriter OpenWrite(string path) => new(path, false, Encoding.UTF8);
 
-        public static void Write(string basePath, GroupedEmojis emojis)
+        public static void Write(string basePath)
         {
+            var emojis = GroupedEmojis.Create();
+
             {
                 using var writer = OpenWrite(Path.Combine(basePath, "RgiTable.Generated.Keycap.cs"));
                 WriteHeader(writer);

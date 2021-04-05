@@ -12,6 +12,4 @@
 //RgiSequenceFinder.TableGenerator.Experimental.SingularEmoji.CollisionCount(); return;
 //RgiSequenceFinder.TableGenerator.Experimental.Compaction.CheckConversion(); return;
 
-var emojis = GroupedEmojis.Create();
-
-SourceGenerator.Write("../../../../RgiSequenceFinder/", emojis);
+SourceGenerator.Write("../../../../RgiSequenceFinder/");
