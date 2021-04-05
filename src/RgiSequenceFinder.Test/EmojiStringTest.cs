@@ -32,6 +32,12 @@ namespace RgiSequenceFinder.Test
             foreach (var row in _data)
             {
                 Assert.True(row.EmojiString.Equals(row.Utf16));
+                Assert.True(EmojiString.Equals(row.EmojiString.Raw, row.Utf16));
+
+                if (row.EmojiString.Raw.Length == 1)
+                {
+                    Assert.True(EmojiString.Equals(row.EmojiString.Raw[0], row.Utf16));
+                }
             }
         }
     }
