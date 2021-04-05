@@ -25,5 +25,14 @@ namespace RgiSequenceFinder.Test
                 Assert.Equal(x, y);
             }
         }
+
+        [Fact]
+        public void Equal()
+        {
+            foreach (var row in _data)
+            {
+                Assert.True(row.EmojiString.Equals(row.Utf16));
+            }
+        }
     }
 }
