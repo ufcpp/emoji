@@ -110,12 +110,12 @@ namespace RgiSequenceFinder
         }
 
         /// <summary>
-        /// RGI にない ZWJ sequence が来た時、ZWJ で分割してそれぞれ <see cref="FindOther(ReadOnlySpan{char})"/> してみる。
+        /// RGI にない ZWJ sequence が来た時、ZWJ で分割してそれぞれ FindOther してみる。
         /// </summary>
         /// <returns><paramref name="indexes"/> に書き込んだ長さ。</returns>
         /// <remarks>
         /// さすがに <see cref="Find(ReadOnlySpan{char}, Span{int})"/> からの再起は要らないと思う。たぶん。
-        /// <see cref="FindOther(ReadOnlySpan{char})"/> しか見ないので、国旗 + ZWJ とかは受け付けない。
+        /// FindOther しか見ないので、国旗 + ZWJ とかは受け付けない。
         /// </remarks>
         private static int SplitZwjSequence(ZwjSplitResult zwjPositions, ReadOnlySpan<char> s, Span<EmojiIndex> indexes)
         {
@@ -156,21 +156,6 @@ namespace RgiSequenceFinder
             if (s.Length == 0) return 0;
 
             var firstChar = char.IsHighSurrogate(s[0]) ? 2 : 1;
-
-            // variation selector 16 削り。
-            // FE0F (variation selector 16)は「絵文字扱いする」という意味なので、
-            // RGI 的には FE0F なしで絵文字になってるものに余計に FE0F がくっついてても絵文字扱いしていい。
-            if (s.Length >= firstChar + 1 && s[s.Length - 1] == '\uFE0F')
-            {
-                // Find から再起するか(国旗 + FE0F とか、FE0F 複数個並べるとかに対応)までやるかどうか…
-                var i = FindOther(s.Slice(0, s.Length - 1));
-
-                if (i >= 0)
-                {
-                    if (indexes.Length > 0) indexes[0] = i;
-                    return 1;
-                }
-            }
 
             // 肌色。
             // skin tone よりも後ろに ZWJ を挟まず何かがくっついてることないはず。
