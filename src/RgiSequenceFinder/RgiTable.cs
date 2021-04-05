@@ -2,6 +2,15 @@
 
 namespace RgiSequenceFinder
 {
+    /// <summary>
+    /// RGI 絵文字の最終判定用のテーブル。
+    /// コード生成してる(このファイル自体は手書き。 partial をコード生成)。
+    /// </summary>
+    /// <remarks>
+    /// 今、<see cref="GraphemeBreak"/> をテーブル生成用の SourceGenerator でも参照してるので、
+    /// 相互依存状態になってて、「ソースコード生成結果がおかしくなるとコンパイルできなくなって生成しなおせない」みたいな状況になってる。
+    /// <see cref="RgiTable"/> と <see cref="Finder"/> だけさらに独立させれば問題は解決するんだけど面倒でやってない。
+    /// </remarks>
     internal partial class RgiTable
     {
         /// <summary>
