@@ -65,13 +65,11 @@
 
         public SkinTonePair(byte value) => Value = value;
 
-        public SkinTonePair(bool hasFe0f, SkinTone tone1, SkinTone tone2)
+        public SkinTonePair(SkinTone tone1, SkinTone tone2)
         {
             // tone がない時 -1 が来る前提。
             // -2 とかみたいなのが来ると処理が狂う。
             Value = (byte)((byte)tone1 | ((byte)tone2 << 3));
-
-            if (hasFe0f) Value |= 0x80;
         }
 
         /// <summary>
@@ -80,9 +78,9 @@
         /// <remarks>
         /// この構造体が default のときに 0 になるようにしてある。
         /// </remarks>
-        public int Length => (Value & 0x7F) is var v &&
-            v > 0b111 ? 2 :
-            v > 0 ? 1 :
+        public int Length =>
+            Value > 0b111 ? 2 :
+            Value > 0 ? 1 :
             0;
 
         /// <summary>

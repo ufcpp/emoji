@@ -174,7 +174,6 @@ namespace RgiSequenceFinder
             var span = zwjPositions.AsSpan();
             var tone1 = SkinTone.None;
             SkinTone tone2;
-            bool hasFe0f = false;
 
             while (true)
             {
@@ -200,7 +199,6 @@ namespace RgiSequenceFinder
                     }
                     else if (s.Length >= 1 && s[0] == 0xFE0F)
                     {
-                        hasFe0f = true;
                         ++count;
                         s = s.Slice(1);
                     }
@@ -221,7 +219,7 @@ namespace RgiSequenceFinder
                 else break;
             }
 
-            return (count, new ZwjSplitResult(zwjPositions, new SkinTonePair(hasFe0f, tone1, tone2)));
+            return (count, new ZwjSplitResult(zwjPositions, new SkinTonePair(tone1, tone2)));
         }
     }
 }
