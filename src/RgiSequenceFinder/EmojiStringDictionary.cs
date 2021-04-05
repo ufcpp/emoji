@@ -140,10 +140,10 @@ namespace RgiSequenceFinder
         /// 値の取得。
         /// キーが見つからなかったら false を返す。
         /// </summary>
-        public bool TryGetValue(ReadOnlySpan<char> key, out ushort index)
-            => _concatinatedString == null ? TryGetValueSingular(key, out index) : TryGetValuePlural(key, out index);
+        public ushort? GetValue(ReadOnlySpan<char> key)
+            => _concatinatedString == null ? GetValueSingular(key) : GetValuePlural(key);
 
-        public bool TryGetValueSingular(ReadOnlySpan<char> key, out ushort index)
+        private ushort? GetValueSingular(ReadOnlySpan<char> key)
         {
             var mask = _mask;
             var hash = EmojiString.GetHashCode(key) & mask;
@@ -153,17 +153,12 @@ namespace RgiSequenceFinder
             {
                 var b = buckets[hash];
 
-                if (!b.HasValue)
-                {
-                    index = default;
-                    return false;
-                }
+                if (!b.HasValue) return null;
                 else
                 {
                     if (EmojiString.Equals(b.KeyStart, key))
                     {
-                        index = b.Index;
-                        return true;
+                        return b.Index;
                     }
                 }
 
@@ -171,7 +166,7 @@ namespace RgiSequenceFinder
             }
         }
 
-        public bool TryGetValuePlural(ReadOnlySpan<char> key, out ushort index)
+        public ushort? GetValuePlural(ReadOnlySpan<char> key)
         {
             var mask = _mask;
             var hash = EmojiString.GetHashCode(key) & mask;
@@ -183,17 +178,12 @@ namespace RgiSequenceFinder
             {
                 var b = buckets[hash];
 
-                if (!b.HasValue)
-                {
-                    index = default;
-                    return false;
-                }
+                if (!b.HasValue) return null;
                 else
                 {
                     if (EmojiString.Equals(s.AsSpan(b.KeyStart, keyLength), key)) // この行しか差がないんだけど、ループの内側の分岐を避けた結果。
                     {
-                        index = b.Index;
-                        return true;
+                        return b.Index;
                     }
                 }
 

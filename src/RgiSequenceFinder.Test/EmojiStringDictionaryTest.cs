@@ -47,7 +47,7 @@ namespace RgiSequenceFinder.Test
                     var count = 0;
                     foreach (var d in dics)
                     {
-                        if (d.TryGetValue(x, out _)) count++;
+                        if (d.GetValue(x) is not null) count++;
                     }
                     Assert.Equal(1, count);
                 }
