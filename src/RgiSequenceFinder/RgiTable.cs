@@ -20,8 +20,7 @@ namespace RgiSequenceFinder
         /// </summary>
         public static (int charRead, int indexWritten) Find(ReadOnlySpan<char> s, Span<EmojiIndex> indexes)
         {
-            // 以下のコード、 Length チェックなしで indexex[0] を書いちゃってるんで、
-            // 最初に if (Length == 0) return した方がいいかも。
+            if (s.Length == 0) return (0, 0);
 
             var emoji = GraphemeBreak.GetEmojiSequence(s);
 
@@ -88,7 +87,7 @@ namespace RgiSequenceFinder
                         // ただ、タグ文字を解釈できないときには黒旗だけの表示も認めてそう。
                         //
                         // この実装では黒旗だけの表示をすることにする。
-                        if (i < 0) i = FindOther(s.Slice(0, 2));
+                        if (i < 0) i = _noSkin1Table.GetValue(s.Slice(0, 2)) ?? -1;
 
                         if (i < 0) return (emoji.LengthInUtf16, 0);
 
@@ -162,48 +161,34 @@ namespace RgiSequenceFinder
             // この実装ではあっても無視。
             // 2個以上 skin tone が並んでるとかも無視。
             // 間に FEOF が挟まってる場合とかも未サポート。
-            // BMP + skin tone の可能性
 
-            if (s.Length >= firstChar + 2)
-            {
-                var st = GraphemeBreak.IsSkinTone(s.Slice(firstChar));
-                if (st > 0)
-                {
-                    // ZWJ 分割後に RGI になってる部分があるので再検索。
-                    // 最初にやった「ZWJ 分割のついでに skin tone 記録」も使えないので作り直す。
-                    var i = FindOther(s.Slice(0, firstChar + 2), st);
-
-                    if (i >= 0)
-                    {
-                        if (indexes.Length > 0) indexes[0] = i;
-                        return 1;
-                    }
-
-                    // なければ元の絵 + 肌色四角を返す。
-                    i = FindOther(s.Slice(0, firstChar));
-
-                    if (i < 0)
-                    {
-                        if (indexes.Length > 0) indexes[0] = FindSkinTone(st);
-                        return 1;
-                    }
-                    else
-                    {
-                        if (indexes.Length > 0) indexes[0] = i;
-                        if (indexes.Length > 1) indexes[1] = FindSkinTone(st);
-                        return 2;
-                    }
-                }
-            }
+            SkinTone tone = s.Length >= firstChar + 2
+                ? GraphemeBreak.IsSkinTone(s.Slice(firstChar))
+                : 0;
 
             // ZWJ 分割後が普通に skin tone も FE0F も付いてない絵文字なことは多々あるので再検索。
-            {
-                var i = FindOther(s);
 
-                if (i >= 0)
+            if (_oneSkin1Table.GetValue(s) is ushort b)
+            {
+                // tone あり。
+                indexes[0] = b + (byte)tone;
+                return 1;
+            }
+
+            if (_noSkin1Table.GetValue(s) is ushort a)
+            {
+                if (tone == 0)
                 {
-                    if (indexes.Length > 0) indexes[0] = i;
+                    // tone なし。
+                    indexes[0] = a;
                     return 1;
+                }
+                else
+                {
+                    // tone なしのはずの文字に tone が付いてる。
+                    indexes[0] = a;
+                    if (indexes.Length > 1) indexes[1] = FindSkinTone(tone);
+                    return 2;
                 }
             }
 
@@ -291,18 +276,6 @@ namespace RgiSequenceFinder
                     ? t1
                     : 4 * t1 + t2 - (t1 < t2 ? 1 : 0) + 1;
             }
-        }
-
-        private static int FindOther(ReadOnlySpan<char> s, SkinTone tone)
-        {
-            if (_oneSkin1Table.GetValue(s) is ushort b) return b + (byte)tone;
-            else return -1;
-        }
-
-        private static int FindOther(ReadOnlySpan<char> s)
-        {
-            if (_noSkin1Table.GetValue(s) is ushort a) return a;
-            return -1;
         }
     }
 }
