@@ -262,11 +262,11 @@ namespace RgiSequenceFinder
 
             if (singular != null) return singular.TryGetValue(c, out var v) ? v : -1;
 
-            if (skinTones.Length > 0) return FindeOtherWithSkinTone(s, skinTones);
+            if (skinTones.Length > 0) return FindOtherWithSkinTone(s, skinTones);
             else return _otherTable.TryGetValue(s, out var v) ? v.index : -1;
         }
 
-        private static int FindeOtherWithSkinTone(ReadOnlySpan<char> s, SkinTonePair tones)
+        private static int FindOtherWithSkinTone(ReadOnlySpan<char> s, SkinTonePair tones)
         {
             Span<char> skinToneRemoved = stackalloc char[s.Length];
             int length = s.Length;
