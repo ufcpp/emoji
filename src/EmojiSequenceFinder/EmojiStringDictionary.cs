@@ -17,7 +17,7 @@ namespace RgiSequenceFinder
     /// - バケットを最初に固定長で取って、以後、resize 一切なし
     /// - GetHashCode の実装も「一定文字以下」みたいな条件で計算する
     /// </remarks>
-    readonly struct EmojiStringDictionary
+    public readonly struct EmojiStringDictionary
     {
         private const int Skip = 655883; // 適当な大き目の素数
 
