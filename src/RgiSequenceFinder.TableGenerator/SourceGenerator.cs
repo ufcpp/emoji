@@ -2,13 +2,18 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 
 namespace RgiSequenceFinder.TableGenerator
 {
     class SourceGenerator
     {
-        public static void Write(StreamWriter writer, GroupedEmojis emojis)
+        private static StreamWriter OpenWrite(string path) => new(path, false, Encoding.UTF8);
+
+        public static void Write(string basePath, GroupedEmojis emojis)
         {
+            using var writer = OpenWrite(Path.Combine(basePath, "RgiTable.Generated.cs"));
+
             WriteHeader(writer);
             WriteKeycaps(writer, emojis.Keycaps);
             WriteRegionFlags(writer, emojis.RegionFlags);
