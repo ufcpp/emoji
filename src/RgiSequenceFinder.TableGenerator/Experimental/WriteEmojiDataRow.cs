@@ -79,7 +79,7 @@ namespace RgiSequenceFinder.TableGenerator.Experimental
             Console.WriteLine("two skin variation (holding hands)");
             for (int len = 0; len < 4; len++) write(categorized.OtherVarTwoSkin, len);
 
-            void write(List<(ushort[] emoji, int index)>?[] array, int len)
+            static void write(List<(ushort[] emoji, int index)>?[] array, int len)
             {
                 var list = array[len];
                 if (list is null) return;
