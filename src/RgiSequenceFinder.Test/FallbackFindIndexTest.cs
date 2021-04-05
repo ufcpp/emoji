@@ -179,7 +179,10 @@ namespace RgiSequenceFinder.Test
             // Microsoft 内で使ってたマスコットだったらしい。
             // 1F431 200D の後ろにそれぞれ 1F464, 1F3CD, 1F4BB, 1F409, 1F453, 1F680
             // 当然 RGI には入ってないのでちょうどいいので未サポート ZWJ sequence のテストデータに使う。
-            var ninjaCats = new[] { "🐱‍👤", "🐱‍💻", "🐱‍🐉", "🐱‍👓", "🐱‍🚀" };
+            //
+            // 🐱‍🏍 は 🏍 (1F3CD)が「FE0F がついてるときだけ絵文字扱い」の文字なので、FE0F の扱いによっては別枠にしないとダメ。
+            // 現状は FE0F を単に無視して絵文字判定してるので混ぜて大丈夫。
+            var ninjaCats = new[] { "🐱‍👤", "🐱‍🏍", "🐱‍💻", "🐱‍🐉", "🐱‍👓", "🐱‍🚀" };
 
             foreach (var cat in ninjaCats)
             {
@@ -202,17 +205,6 @@ namespace RgiSequenceFinder.Test
             Assert.Equal(ninjaCats.Length * 2, written2);
 
             Assert.True(indexes1.SequenceEqual(indexes2));
-
-            // 🐱‍🏍 だけ特殊。
-            // 🏍 (1F3CD)が「FE0F がついてるときだけ絵文字扱い」の文字なので、テーブル中になくて除外される。
-            // ZWJ がある時だけ EmojiIndex が書き込まれるので、上記の「ZWJ を消し去ったのと同じ結果」前提が通用しない。
-            {
-                var (read, written) = RgiTable.Find("🐱‍🏍", indexes);
-
-                Assert.Equal(5, read);
-                Assert.Equal(2, written);
-                Assert.Equal(catIndex, indexes[0]);
-            }
         }
 
         [Fact]
