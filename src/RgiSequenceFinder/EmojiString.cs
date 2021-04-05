@@ -79,6 +79,8 @@ namespace RgiSequenceFinder
                     emoji[i++] = c1;
                 }
                 else emoji[i++] = c;
+
+                if (i >= emoji.Length) return i;
             }
 
             return i;
