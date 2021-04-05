@@ -8,6 +8,8 @@ namespace EmojiData
 {
     public class Loader
     {
+        //todo: master/main じゃなくて、特定のコミットから取らないとある日突然変わるので困るはず。
+        // あと、違う URL (違うコミット)から取ったときはローカルストレージのキャッシュ無効化しないと。
         const string EmojiDataSourceUrl = "https://github.com/iamcal/emoji-data/raw/master/emoji.json";
         const string CacheFileName = "emoji.json";
 
