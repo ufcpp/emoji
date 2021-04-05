@@ -186,7 +186,7 @@ namespace RgiSequenceFinder
                 {
                     // ZWJ 分割後に RGI になってる部分があるので再検索。
                     // 最初にやった「ZWJ 分割のついでに skin tone 記録」も使えないので作り直す。
-                    var i = FindOther(s.Slice(0, firstChar + 2), new SkinTonePair(st, SkinTone.None));
+                    var i = FindOther(s.Slice(0, firstChar + 2), st);
 
                     if (i >= 0)
                     {
@@ -264,12 +264,12 @@ namespace RgiSequenceFinder
             if (len == 0)
             {
                 if (_noSkin1Table.GetValue(s) is ushort a && noTone) return a;
-                else if (_oneSkin1Table.GetValue(s) is ushort b) return b + (byte)zwjs.SkinTones.Tone1;
+                else if (_oneSkin1Table.GetValue(s) is ushort b) return b + oneOffset(zwjs.SkinTones);
             }
             else if (len == 1)
             {
                 if (_noSkin2Table.GetValue(s) is ushort a && noTone) return a;
-                else if (_oneSkin2Table.GetValue(s) is ushort b) return b + (byte)zwjs.SkinTones.Tone1;
+                else if (_oneSkin2Table.GetValue(s) is ushort b) return b + oneOffset(zwjs.SkinTones);
             }
             else if (len == 2)
             {
@@ -283,6 +283,13 @@ namespace RgiSequenceFinder
             }
             return -1;
 
+            // emoji-data.json の並び的に、 skin_variations の並びは skin tone から機械的に決定できる。
+            // ただ、3パターンある。
+
+            // skin tone 1つ持ち
+            int oneOffset(SkinTonePair tones) => (int)tones.Tone1;
+
+            // skin tone 2つ持ち
             int twoOffset(SkinTonePair tones)
             {
                 var (t1, t2) = tones;
@@ -290,6 +297,7 @@ namespace RgiSequenceFinder
                 return 5 * t1 + t2 - 5;
             }
 
+            // 👫👬👭 用特殊処理
             int varTwoOffset(SkinTonePair tones)
             {
                 var (t1, t2) = tones;
@@ -300,104 +308,16 @@ namespace RgiSequenceFinder
             }
         }
 
-        private static int FindOther(ReadOnlySpan<char> s, SkinTonePair skinTones = default)
+        private static int FindOther(ReadOnlySpan<char> s, SkinTone tone)
         {
-            var (singular, c) = GetSingularTable(s);
-
-            if (singular != null) return singular.TryGetValue(c, out var v) ? v : -1;
-
-            if (skinTones.Length > 0) return FindOtherWithSkinTone(s, skinTones);
-            else return _otherTable.TryGetValue(s, out var v) ? v.index : -1;
+            if (_oneSkin1Table.GetValue(s) is ushort b) return b + (byte)tone;
+            else return -1;
         }
 
-        private static int FindOtherWithSkinTone(ReadOnlySpan<char> s, SkinTonePair tones)
+        private static int FindOther(ReadOnlySpan<char> s)
         {
-            Span<char> skinToneRemoved = stackalloc char[s.Length];
-            int length = s.Length;
-
-            var toneLength = tones.Length;
-
-            if (toneLength > 0)
-            {
-                var firstChar = char.IsHighSurrogate(s[0]) ? 2 : 1; // UTF-16 なので、「2文字目」と言いつつサロゲートペアで個数分岐。
-                var lastRemoveChar = toneLength == 1 ? 0 : 2; // skin tone 2つの時は末尾を UTF-16 2個分削る。
-
-                s.Slice(0, firstChar).CopyTo(skinToneRemoved);
-                s.Slice(2 + firstChar, s.Length - 2 - firstChar - lastRemoveChar).CopyTo(skinToneRemoved.Slice(firstChar));
-                length -= 2 + lastRemoveChar;
-            }
-
-            if (_otherTable.TryGetValue(skinToneRemoved.Slice(0, length), out var t))
-            {
-                var offset = OffsetFromSkinTone(t.skinVariationType, tones.Tone1, tones.Tone2);
-                return t.index + offset;
-            }
-
-            // ちゃんとしたテーブルを作ってればここには来ないはずだけど一応。
-            return _otherTable.TryGetValue(s, out var v) ? v.index : -1;
-        }
-
-        /// <summary>
-        /// 1文字だけとか「1文字 + FE0F」の絵文字は特別扱いして char キーの辞書を作ってるので、そっちを引けるかの判定。
-        /// </summary>
-        private static (CharDictionary singular, char c) GetSingularTable(ReadOnlySpan<char> s)
-        {
-            CharDictionary singular = null;
-            char c = '\0';
-
-            if (s.Length == 1)
-            {
-                singular = _singularTable[0, 0];
-                c = s[0];
-            }
-            else if (s.Length == 2)
-            {
-                if (s[1] == '\uFE0F')
-                {
-                    singular = _singularTable[1, 0];
-                    c = s[0];
-                }
-                else
-                {
-                    if (s[0] == '\uD83C') singular = _singularTable[0, 1];
-                    else if (s[0] == '\uD83D') singular = _singularTable[0, 2];
-                    else if (s[0] == '\uD83E') singular = _singularTable[0, 3];
-                    c = s[1];
-                }
-            }
-            else if (s.Length == 3 && s[2] == '\uFE0F')
-            {
-                if (s[0] == '\uD83C') singular = _singularTable[1, 1];
-                else if (s[0] == '\uD83D') singular = _singularTable[1, 2];
-                else if (s[0] == '\uD83E') singular = _singularTable[1, 3];
-                c = s[1];
-            }
-
-            return (singular, c);
-        }
-
-        /// <summary>
-        /// emoji-data.json の並び的に、 skin_variations の並びは skin tone から機械的に決定できる。
-        /// ただ、3パターンある。
-        /// </summary>
-        private static int OffsetFromSkinTone(byte type, SkinTone tone1, SkinTone tone2)
-        {
-            var t1 = (int)tone1;
-            var t2 = (int)tone2;
-
-            switch (type)
-            {
-                // skin tone 1つ持ち
-                case 1: return t1;
-                // skin tone 2つ持ち(2人家族系)
-                case 2: return 5 * t1 + t2 - 5;
-                // 👫👬👭 用特殊処理
-                case 3: return t1 == t2
-                    ? t1
-                    : 4 * t1 + t2 - (t1 < t2 ? 1 : 0) + 1;
-                // 来ないはずだけど
-                default: return 0;
-            };
+            if (_noSkin1Table.GetValue(s) is ushort a) return a;
+            return -1;
         }
     }
 }
