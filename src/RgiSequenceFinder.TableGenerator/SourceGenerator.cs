@@ -12,15 +12,36 @@ namespace RgiSequenceFinder.TableGenerator
 
         public static void Write(string basePath, GroupedEmojis emojis)
         {
-            using var writer = OpenWrite(Path.Combine(basePath, "RgiTable.Generated.cs"));
-
-            WriteHeader(writer);
-            WriteKeycaps(writer, emojis.Keycaps);
-            WriteRegionFlags(writer, emojis.RegionFlags);
-            WriteTagFlags(writer, emojis.TagFlags);
-            WriteSkinTones(writer, emojis.SkinTones);
-            WriterOthers(writer, emojis.Singlulars, emojis.Others);
-            WriteFooter(writer);
+            {
+                using var writer = OpenWrite(Path.Combine(basePath, "RgiTable.Generated.Keycap.cs"));
+                WriteHeader(writer);
+                WriteKeycaps(writer, emojis.Keycaps);
+                WriteFooter(writer);
+            }
+            {
+                using var writer = OpenWrite(Path.Combine(basePath, "RgiTable.Generated.Region.cs"));
+                WriteHeader(writer);
+                WriteRegionFlags(writer, emojis.RegionFlags);
+                WriteFooter(writer);
+            }
+            {
+                using var writer = OpenWrite(Path.Combine(basePath, "RgiTable.Generated.Tag.cs"));
+                WriteHeader(writer);
+                WriteTagFlags(writer, emojis.TagFlags);
+                WriteFooter(writer);
+            }
+            {
+                using var writer = OpenWrite(Path.Combine(basePath, "RgiTable.Generated.Skin.cs"));
+                WriteHeader(writer);
+                WriteSkinTones(writer, emojis.SkinTones);
+                WriteFooter(writer);
+            }
+            {
+                using var writer = OpenWrite(Path.Combine(basePath, "RgiTable.Generated.Other.cs"));
+                WriteHeader(writer);
+                WriterOthers(writer, emojis.Singlulars, emojis.Others);
+                WriteFooter(writer);
+            }
         }
 
         private static void WriteHeader(StreamWriter writer)
@@ -64,7 +85,6 @@ namespace RgiSequenceFinder
             writer.Write(@"                default: return -1;
             }
         }
-
 ");
         }
 
@@ -111,7 +131,6 @@ namespace RgiSequenceFinder
                 else return i + 128;
             }
         }
-
 ");
         }
 
@@ -135,7 +154,6 @@ namespace RgiSequenceFinder
             writer.Write(@"                default: return -1;
             }
         }
-
 ");
         }
 
@@ -146,7 +164,6 @@ namespace RgiSequenceFinder
             writer.Write(@";
 
         private static int FindSkinTone(SkinTone skinTone) => _skinToneFirstIndex + (int)skinTone - 1;
-
 ");
         }
 
