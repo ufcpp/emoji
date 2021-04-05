@@ -62,9 +62,9 @@ namespace RgiSequenceFinder.Test
 
             for (int i = 0; i < count; i++)
             {
-                var r = list[i];
-                r.emoji.AsSpan().CopyTo(concat.AsSpan(utf16Len * i));
-                indexes[i] = (ushort)r.index;
+                var (emoji, index) = list[i];
+                emoji.AsSpan().CopyTo(concat.AsSpan(utf16Len * i));
+                indexes[i] = (ushort)index;
             }
 
             var bits = (int)Math.Round(Math.Log2(count));

@@ -30,7 +30,7 @@ namespace RgiSequenceFinder
                 case EmojiSequenceType.Other:
                     {
                         var span = s.Slice(0, emoji.LengthInUtf16);
-                        var i = FindOther(span, emoji.ZwjPositions.SkinTones);
+                        var i = FindOther(span, emoji.ZwjPositions);
 
                         if (i >= 0)
                         {
@@ -186,7 +186,7 @@ namespace RgiSequenceFinder
                 {
                     // ZWJ 分割後に RGI になってる部分があるので再検索。
                     // 最初にやった「ZWJ 分割のついでに skin tone 記録」も使えないので作り直す。
-                    var i = FindOther(s.Slice(0, firstChar + 2), new SkinTonePair(st, SkinTone.None));
+                    var i = FindOther(s.Slice(0, firstChar + 2), new ZwjSplitResult(default, new SkinTonePair(st, SkinTone.None)));
 
                     if (i >= 0)
                     {
@@ -256,13 +256,13 @@ namespace RgiSequenceFinder
             }
         }
 
-        private static int FindOther(ReadOnlySpan<char> s, SkinTonePair skinTones = default)
+        private static int FindOther(ReadOnlySpan<char> s, ZwjSplitResult zwjs = default)
         {
             var (singular, c) = GetSingularTable(s);
 
             if (singular != null) return singular.TryGetValue(c, out var v) ? v : -1;
 
-            if (skinTones.Length > 0) return FindOtherWithSkinTone(s, skinTones);
+            if (zwjs.SkinTones.Length > 0) return FindOtherWithSkinTone(s, zwjs.SkinTones);
             else return _otherTable.TryGetValue(s, out var v) ? v.index : -1;
         }
 
