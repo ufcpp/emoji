@@ -11,7 +11,9 @@ namespace RgiSequenceFinder.TableGenerator.Data
     internal class Cache
     {
         private static JsonDocument? _doc;
+#pragma warning disable CA2012 // Use ValueTasks correctly
         private static JsonDocument Doc => _doc ??= Loader.LoadJsonDocAsync().GetAwaiter().GetResult();
+#pragma warning restore CA2012
 
         private static EmojiDataRow[]? _data;
         public static EmojiDataRow[] Data => _data ??= EmojiDataRow.Load(Doc).ToArray();
