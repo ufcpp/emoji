@@ -55,7 +55,6 @@ namespace RgiSequenceFinder.TableGenerator
                 WriterEmojiDictionary(writer, "twoSkin3", emojis.OtherTwoSkin[2]); // 現状1文字しかないので Dictionary 作るの多少もったいない。
                 WriterEmojiDictionary(writer, "varTwoSkin3", emojis.OtherVarTwoSkin[2]);
 
-                WriterOthers(writer, emojisOld.Singlulars, emojisOld.Others);
                 WriteFooter(writer);
             }
         }
