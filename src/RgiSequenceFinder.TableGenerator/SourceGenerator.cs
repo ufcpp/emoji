@@ -43,6 +43,18 @@ namespace RgiSequenceFinder.TableGenerator
             {
                 using var writer = OpenWrite(Path.Combine(basePath, "RgiTable.Generated.Other.cs"));
                 WriteHeader(writer);
+                WriterEmojiDictionary(writer, "noSkin1", emojis.OtherNoSkin[0]);
+                WriterEmojiDictionary(writer, "noSkin2", emojis.OtherNoSkin[1]);
+                WriterEmojiDictionary(writer, "noSkin3", emojis.OtherNoSkin[2]);
+                WriterEmojiDictionary(writer, "noSkin4", emojis.OtherNoSkin[3]);
+                WriterEmojiDictionary(writer, "oneSkin1", emojis.OtherOneSkin[0]);
+                WriterEmojiDictionary(writer, "oneSkin2", emojis.OtherOneSkin[1]);
+
+                // Unicode 13.0 時点、これだけでいいはず。
+                // 13.1 で [3] も必要。
+                WriterEmojiDictionary(writer, "twoSkin3", emojis.OtherTwoSkin[2]); // 現状1文字しかないので Dictionary 作るの多少もったいない。
+                WriterEmojiDictionary(writer, "varTwoSkin3", emojis.OtherVarTwoSkin[2]);
+
                 WriterOthers(writer, emojisOld.Singlulars, emojisOld.Others);
                 WriteFooter(writer);
             }
@@ -171,7 +183,48 @@ namespace RgiSequenceFinder
 ");
         }
 
-        private static void WriterOthers(StreamWriter writer, List<(char c, int index)>?[,] singulars, List<(string emoji, int index, byte skinVariationType)> others)
+        private static void WriterEmojiDictionary(StreamWriter writer, string name, List<(ushort[] emoji, int index)> list)
+        {
+            writer.Write(@"        private static readonly EmojiStringDictionary _");
+            writer.Write(name);
+            writer.Write(@"Table = new EmojiStringDictionary(");
+
+            var utf16Len = list[0].emoji.Length;
+            writer.Write(utf16Len);
+
+            var count = list.Count;
+            var bits = (int)Math.Round(Math.Log2(count));
+            // ビット数削るほど被り率上がるので、256/512 を境にビット数増やしてる。
+            bits = bits <= 7 ? bits + 2 : bits + 1;
+            var capacity = 1 << bits;
+
+            writer.Write(", ");
+            writer.Write(capacity);
+            writer.Write(@",
+            new ushort[] { ");
+            foreach (var (s, _) in list)
+            {
+                foreach (var c in s)
+                {
+                    writer.Write("0x");
+                    writer.Write(((int)c).ToString("X4"));
+                    writer.Write(", ");
+                }
+            }
+            writer.Write(@"},
+            new ushort[] { ");
+
+            foreach (var (_, index) in list)
+            {
+                writer.Write(index);
+                writer.Write(", ");
+            }
+
+            writer.Write(@"});
+");
+            }
+
+            private static void WriterOthers(StreamWriter writer, List<(char c, int index)>?[,] singulars, List<(string emoji, int index, byte skinVariationType)> others)
         {
             writer.Write(@"        private static CharDictionary[,] _singularTable = new CharDictionary[,]
         {
