@@ -13,7 +13,6 @@ namespace RgiSequenceFinder.TableGenerator
 
         public static void Write(string basePath)
         {
-            var emojisOld = GroupedEmojis.Create();
             var emojis = new CategorizedEmoji(Cache.Data);
 
             {
@@ -222,111 +221,6 @@ namespace RgiSequenceFinder
             writer.Write(@"});
 ");
             }
-
-            private static void WriterOthers(StreamWriter writer, List<(char c, int index)>?[,] singulars, List<(string emoji, int index, byte skinVariationType)> others)
-        {
-            writer.Write(@"        private static CharDictionary[,] _singularTable = new CharDictionary[,]
-        {
-");
-
-            for (int fe0f = 0; fe0f < 2; fe0f++)
-            {
-                writer.Write(@"            {
-");
-
-                for (int bmp = 0; bmp < 4; bmp++)
-                {
-                    var list = singulars[fe0f, bmp];
-
-                    if (list is null)
-                    {
-                        writer.Write(@"                null,
-");
-                    }
-                    else
-                    {
-                        var count = list.Count;
-                        var bits = (int)Math.Round(Math.Log2(count));
-
-                        // ビット数削るほど被り率上がるので、256/512 を境にビット数増やしてる。
-                        bits = bits <= 7 ? bits + 2 : bits + 1;
-                        var capacity = 1 << bits;
-
-                        writer.Write(@"                new CharDictionary(");
-                        writer.Write(capacity);
-                        writer.Write(@",
-                    new ushort[] { ");
-                        foreach (var (c, _) in list)
-                        {
-                            writer.Write("0x");
-                            writer.Write(((int)c).ToString("X4"));
-                            writer.Write(", ");
-                        }
-                        writer.Write(@"},
-                    new ushort[] { ");
-
-                        foreach (var (_, index) in list)
-                        {
-                            writer.Write(index);
-                            writer.Write(", ");
-                        }
-
-                        writer.Write(@"}),
-");
-                    }
-                }
-
-                writer.Write(@"            },
-");
-            }
-
-            writer.Write(@"        };
-");
-
-
-            writer.Write(@"        private static StringDictionary _otherTable = new StringDictionary(
-            """);
-
-            foreach (var (s, _, _) in others)
-            {
-                foreach (var c in s)
-                {
-                    writer.Write("\\u");
-                    writer.Write(((int)c).ToString("X4"));
-                }
-            }
-
-            writer.Write(@""",
-            new byte[] { ");
-
-            foreach (var (s, _, _) in others)
-            {
-                writer.Write(s.Length);
-                writer.Write(", ");
-            }
-
-            writer.Write(@"},
-            new ushort[] { ");
-
-            foreach (var (_, index, _) in others)
-            {
-                writer.Write(index);
-                writer.Write(", ");
-            }
-
-            writer.Write(@"},
-            new byte[] { ");
-
-            foreach (var (_, _, variation) in others)
-            {
-                writer.Write(variation);
-                writer.Write(", ");
-            }
-
-            writer.Write(@"}
-            );
-");
-        }
 
 #if false
 // こういう実装も試してみたという形跡。
