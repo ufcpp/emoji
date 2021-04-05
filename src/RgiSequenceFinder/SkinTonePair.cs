@@ -61,5 +61,7 @@
         /// ZWJ sequence 的に、最後の符号点に出てくる。
         /// </summary>
         public SkinTone Tone2 => (SkinTone)((Value >> 3) & 0b111);
+
+        public void Deconstruct(out int tone1, out int tone2) => (tone1, tone2) = ((int)Tone1, (int)Tone2);
     }
 }

@@ -186,7 +186,7 @@ namespace RgiSequenceFinder
                 {
                     // ZWJ 分割後に RGI になってる部分があるので再検索。
                     // 最初にやった「ZWJ 分割のついでに skin tone 記録」も使えないので作り直す。
-                    var i = FindOther(s.Slice(0, firstChar + 2), new ZwjSplitResult(default, new SkinTonePair(st, SkinTone.None)));
+                    var i = FindOther(s.Slice(0, firstChar + 2), new SkinTonePair(st, SkinTone.None));
 
                     if (i >= 0)
                     {
@@ -256,13 +256,57 @@ namespace RgiSequenceFinder
             }
         }
 
-        private static int FindOther(ReadOnlySpan<char> s, ZwjSplitResult zwjs = default)
+        private static int FindOther(ReadOnlySpan<char> s, ZwjSplitResult zwjs)
+        {
+            var len = zwjs.Length;
+            var noTone = zwjs.SkinTones.Length == 0;
+
+            if (len == 0)
+            {
+                if (_noSkin1Table.GetValue(s) is ushort a && noTone) return a;
+                else if (_oneSkin1Table.GetValue(s) is ushort b) return b + (byte)zwjs.SkinTones.Tone1;
+            }
+            else if (len == 1)
+            {
+                if (_noSkin2Table.GetValue(s) is ushort a && noTone) return a;
+                else if (_oneSkin2Table.GetValue(s) is ushort b) return b + (byte)zwjs.SkinTones.Tone1;
+            }
+            else if (len == 2)
+            {
+                if (_noSkin3Table.GetValue(s) is ushort a && noTone) return a;
+                else if (_twoSkin3Table.GetValue(s) is ushort b) return b + twoOffset(zwjs.SkinTones);
+                else if (_varTwoSkin3Table.GetValue(s) is ushort c) return c + varTwoOffset(zwjs.SkinTones);
+            }
+            else if (len == 3)
+            {
+                if (_noSkin4Table.GetValue(s) is ushort a && noTone) return a;
+            }
+            return -1;
+
+            int twoOffset(SkinTonePair tones)
+            {
+                var (t1, t2) = tones;
+                if (t1 == 0 || t2 == 0) return 0;
+                return 5 * t1 + t2 - 5;
+            }
+
+            int varTwoOffset(SkinTonePair tones)
+            {
+                var (t1, t2) = tones;
+                if (t1 == 0 || t2 == 0) return 0;
+                return t1 == t2
+                    ? t1
+                    : 4 * t1 + t2 - (t1 < t2 ? 1 : 0) + 1;
+            }
+        }
+
+        private static int FindOther(ReadOnlySpan<char> s, SkinTonePair skinTones = default)
         {
             var (singular, c) = GetSingularTable(s);
 
             if (singular != null) return singular.TryGetValue(c, out var v) ? v : -1;
 
-            if (zwjs.SkinTones.Length > 0) return FindOtherWithSkinTone(s, zwjs.SkinTones);
+            if (skinTones.Length > 0) return FindOtherWithSkinTone(s, skinTones);
             else return _otherTable.TryGetValue(s, out var v) ? v.index : -1;
         }
 
