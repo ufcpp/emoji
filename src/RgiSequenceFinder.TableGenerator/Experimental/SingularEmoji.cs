@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RgiSequenceFinder.TableGenerator.Data;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -9,44 +10,24 @@ namespace RgiSequenceFinder.TableGenerator.Experimental
     /// </summary>
     class SingularEmoji
     {
-        public static void CheckCount()
-        {
-            var emojis = GroupedEmojis.Create();
-
-            var count = 0;
-            void w(int c)
-            {
-                count += c;
-                Console.WriteLine(c);
-            }
-
-            for (int i = 0; i < 4; i++)
-            {
-                for (int j = 0; j < 2; j++)
-                {
-                    Console.Write($"{j}, {i}: ");
-                    w(emojis.Singlulars[j, i]?.Count ?? 0);
-                }
-            }
-
-            // 前提があってれば以下の2つの数字そろうはず。(仕様変更でそろわなくなってる)
-            Console.WriteLine((count, emojis.Others.Count));
-        }
-
         public static void CollisionCount()
         {
-            var emojis = GroupedEmojis.Create();
+            var cat = new CategorizedEmoji(Cache.Data);
 
-            CollisionCount(emojis.Singlulars[0, 0]!.Select(t => t.c).ToArray());
-            CollisionCount(emojis.Singlulars[1, 0]!.Select(t => t.c).ToArray());
-            CollisionCount(emojis.Singlulars[0, 1]!.Select(t => t.c).ToArray());
-            CollisionCount(emojis.Singlulars[1, 1]!.Select(t => t.c).ToArray());
-            CollisionCount(emojis.Singlulars[0, 2]!.Select(t => t.c).ToArray());
-            CollisionCount(emojis.Singlulars[1, 2]!.Select(t => t.c).ToArray());
-            CollisionCount(emojis.Singlulars[0, 3]!.Select(t => t.c).ToArray());
+            CollisionCount(cat.OtherNoSkin[0].Select(t => t.emoji).ToArray());
+            CollisionCount(cat.OtherNoSkin[1].Select(t => t.emoji).ToArray());
+            CollisionCount(cat.OtherNoSkin[2].Select(t => t.emoji).ToArray());
+            CollisionCount(cat.OtherNoSkin[3].Select(t => t.emoji).ToArray());
+            CollisionCount(cat.OtherOneSkin[0].Select(t => t.emoji).ToArray());
+            CollisionCount(cat.OtherOneSkin[1].Select(t => t.emoji).ToArray());
+
+            // この2種はそれぞれ1個、3個しかないし下手にハッシュテーブル使うより線形探索の方がいいかも。
+            // (Unicode 13.1 でそれぞれ3個、9個になるかも。それでもまあ。)
+            CollisionCount(cat.OtherTwoSkin[2].Select(t => t.emoji).ToArray());
+            CollisionCount(cat.OtherVarTwoSkin[2].Select(t => t.emoji).ToArray());
         }
 
-        private static void CollisionCount(IEnumerable<char> list)
+        private static void CollisionCount(IEnumerable<ushort[]> list)
         {
             var count = list.Count();
             var bits = (int)Math.Round(Math.Log2(count));
@@ -58,7 +39,7 @@ namespace RgiSequenceFinder.TableGenerator.Experimental
 
             // 元々、下位桁に被りがあんまりないので単純に mod をハッシュ値にしても大して被らないみたい。
             // これでハッシュ値衝突率1割ないくらいになる。
-            var groups = list.Select(x => x & mask).GroupBy(x => x);
+            var groups = list.Select(x => new EmojiString(x).GetHashCode() & mask).GroupBy(x => x);
             var hashDistinct = groups.Count();
             var max = groups.Max(g => g.Count());
             var ave = groups.Average(g => (double)g.Count());

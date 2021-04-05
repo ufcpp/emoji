@@ -1,4 +1,5 @@
 ﻿using EmojiData;
+using RgiSequenceFinder.TableGenerator.Data;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -9,14 +10,14 @@ namespace RgiSequenceFinder.TableGenerator.Experimental
 {
     class WriteEmojiDataRow
     {
-        public static async Task WriteAsync()
+        public static void Write()
         {
-            var doc = await Loader.LoadJsonDocAsync();
+            var data = Cache.Data;
 
             //var w = Console.Out;
             using var w = new StreamWriter("a.csv", false, Encoding.UTF8);
 
-            foreach (var r in EmojiDataRow.Load(doc))
+            foreach (var r in data)
             {
                 write(w, r);
                 w.WriteLine();
@@ -58,10 +59,9 @@ namespace RgiSequenceFinder.TableGenerator.Experimental
             }
         }
 
-        public static async Task Categorized()
+        public static void Categorized()
         {
-            var doc = await Loader.LoadJsonDocAsync();
-            var categorized = new CategorizedEmoji(EmojiDataRow.Load(doc));
+            var categorized = new CategorizedEmoji(Cache.Data);
 
             Console.WriteLine($"keycap: {categorized.Keycaps.Count}");
             Console.WriteLine($"region: {categorized.RegionFlags.Count}");

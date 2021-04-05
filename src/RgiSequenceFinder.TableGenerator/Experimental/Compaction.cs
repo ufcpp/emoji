@@ -75,7 +75,7 @@ namespace RgiSequenceFinder.TableGenerator.Experimental
 
         public static void CheckConversion()
         {
-            var list = Data.RgiEmojiSequenceList;
+            var list = RgiSequenceFinder.Data.RgiEmojiSequenceList;
             Span<char> buffer = stackalloc char[16];
             var convertedSequences = new List<string>();
 

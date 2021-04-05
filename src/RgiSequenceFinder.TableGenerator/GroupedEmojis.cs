@@ -62,7 +62,7 @@ namespace RgiSequenceFinder.TableGenerator
         // 2640 ♀ female sign
         // 2642 ♂ male sign
 
-        public static GroupedEmojis Create() => new(Data.UnvariedRgiEmojiSequenceList);
+        public static GroupedEmojis Create() => new(RgiSequenceFinder.Data.UnvariedRgiEmojiSequenceList);
 
         public GroupedEmojis((string emoji, ushort index, byte variationType)[] data)
         {

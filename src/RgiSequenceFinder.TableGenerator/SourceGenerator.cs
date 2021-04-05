@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RgiSequenceFinder.TableGenerator.Data;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -12,7 +13,8 @@ namespace RgiSequenceFinder.TableGenerator
 
         public static void Write(string basePath)
         {
-            var emojis = GroupedEmojis.Create();
+            var emojisOld = GroupedEmojis.Create();
+            var emojis = new CategorizedEmoji(Cache.Data);
 
             {
                 using var writer = OpenWrite(Path.Combine(basePath, "RgiTable.Generated.Keycap.cs"));
@@ -41,7 +43,7 @@ namespace RgiSequenceFinder.TableGenerator
             {
                 using var writer = OpenWrite(Path.Combine(basePath, "RgiTable.Generated.Other.cs"));
                 WriteHeader(writer);
-                WriterOthers(writer, emojis.Singlulars, emojis.Others);
+                WriterOthers(writer, emojisOld.Singlulars, emojisOld.Others);
                 WriteFooter(writer);
             }
         }
