@@ -24,6 +24,9 @@ namespace RgiSequenceFinder.TableGenerator.Experimental
                 w.Write(r.Utf16);
 
                 w.Write(", ");
+                w.Write(r.Index);
+
+                w.Write(", ");
                 w.Write(r.SkinVariation);
 
                 w.Write(",");

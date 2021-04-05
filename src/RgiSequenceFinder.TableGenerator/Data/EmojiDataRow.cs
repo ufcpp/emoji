@@ -10,6 +10,7 @@ namespace RgiSequenceFinder.TableGenerator
     public class EmojiDataRow
     {
         public string Utf16 { get; }
+        public int Index { get; }
         public int SkinVariation { get; }
 
         private ushort[] _emojiStr;
@@ -21,8 +22,9 @@ namespace RgiSequenceFinder.TableGenerator
         public EmojiString VariantEmojiString => new(_varEmojiStr);
         public ReadOnlySpan<Rune> Utf32 => _utf32;
 
-        public EmojiDataRow(Rune[] utf32, int skinVariation, Rune[]? varUtf32 = null)
+        public EmojiDataRow(Rune[] utf32, int index, int skinVariation, Rune[]? varUtf32 = null)
         {
+            Index = index;
             SkinVariation = skinVariation;
             _utf32 = utf32;
 
@@ -60,7 +62,7 @@ namespace RgiSequenceFinder.TableGenerator
 
                 if (!elem.TryGetProperty("skin_variations", out var skinVariations))
                 {
-                    yield return new(runes, 0);
+                    yield return new(runes, index, 0);
                     ++index;
                     continue;
                 }
@@ -68,7 +70,7 @@ namespace RgiSequenceFinder.TableGenerator
                 var count = skinVariations.EnumerateObject().Count();
                 if (count == 5)
                 {
-                    yield return new(runes, 1);
+                    yield return new(runes, index, 1);
                     index += 6;
                 }
                 else if (count == 25)
@@ -82,7 +84,7 @@ namespace RgiSequenceFinder.TableGenerator
                         variantRunes = parseUnified(variant.Value);
                     }
 
-                    yield return new(runes, 2, variantRunes);
+                    yield return new(runes, index, 2, variantRunes);
 
                     //todo: holding hands 系特殊対応。
                     // varEmojiStr 取得
