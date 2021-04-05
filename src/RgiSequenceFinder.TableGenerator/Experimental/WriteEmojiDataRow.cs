@@ -1,12 +1,14 @@
 ﻿using EmojiData;
+using System;
 using System.IO;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace RgiSequenceFinder.TableGenerator.Experimental
 {
     class WriteEmojiDataRow
     {
-        public static async System.Threading.Tasks.Task WriteAsync()
+        public static async Task WriteAsync()
         {
             var doc = await Loader.LoadJsonDocAsync();
 
@@ -15,11 +17,11 @@ namespace RgiSequenceFinder.TableGenerator.Experimental
 
             foreach (var r in EmojiDataRow.Load(doc))
             {
-                Write(w, r);
+                write(w, r);
                 w.WriteLine();
             }
 
-            static void Write(TextWriter w, EmojiDataRow r)
+            static void write(TextWriter w, EmojiDataRow r)
             {
                 w.Write(r.Utf16);
 
@@ -53,6 +55,22 @@ namespace RgiSequenceFinder.TableGenerator.Experimental
                     }
                 }
             }
+        }
+
+        public static async Task Categorized()
+        {
+            var doc = await Loader.LoadJsonDocAsync();
+            var categorized = new CategorizedEmoji(EmojiDataRow.Load(doc));
+
+            Console.WriteLine($"keycap: {categorized.Keycaps.Count}");
+            Console.WriteLine($"region: {categorized.RegionFlags.Count}");
+            Console.WriteLine($"tag   : {categorized.TagFlags.Count}");
+
+            for (int x = 0; x < 4; x++)
+                for (int y = 0; y < 4; y++)
+                {
+                    Console.WriteLine($"len: {x + 1}, skin: {y}, count: {categorized.Others[x, y]?.Count ?? 0}");
+                }
         }
     }
 }
