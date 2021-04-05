@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RgiSequenceFinder.TableGenerator.Data;
+using System;
 using System.Linq;
 
 namespace RgiSequenceFinder.TableGenerator.Experimental
@@ -114,7 +115,7 @@ namespace RgiSequenceFinder.TableGenerator.Experimental
 
         private static void CollisionCount(Func<string, int> getHashCode)
         {
-            var data = RgiSequenceFinder.Data.RgiEmojiSequenceList;
+            var data = Cache.RawData;
 
             var groups = data.Select(x => getHashCode(x) & ((1 << Bits) - 1)).GroupBy(x => x);
             var hashDistinct = groups.Count();

@@ -1,19 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace RgiSequenceFinder.Test
 {
-    public class EmojiSequenceTest
+    public class EmojiSequenceTest : IAsyncLifetime
     {
+        private string[] _data = null!;
+        public Task DisposeAsync() => Task.CompletedTask;
+        public async Task InitializeAsync() => _data = await DataCache.GetRawData().ConfigureAwait(false);
+
         [Fact]
         public void TestKeycap()
         {
             var keys = new HashSet<byte>(new[] { (byte)'*', (byte)'#', (byte)'0', (byte)'1', (byte)'2', (byte)'3', (byte)'4', (byte)'5', (byte)'6', (byte)'7', (byte)'8', (byte)'9', });
 
             var count = 0;
-            foreach (var s in Data.RgiEmojiSequenceList)
+            foreach (var s in _data)
             {
                 if (Keycap.Create(s) is { Value: not 0 } key)
                 {
@@ -29,7 +34,7 @@ namespace RgiSequenceFinder.Test
         public void TestFlagSequence()
         {
             var count = 0;
-            foreach (var s in Data.RgiEmojiSequenceList)
+            foreach (var s in _data)
             {
                 if (RegionalIndicator.Create(s) is { Value: not 0 } r)
                 {
@@ -51,7 +56,7 @@ namespace RgiSequenceFinder.Test
             var subdivitions = new HashSet<TagSequence>(new[] { TagSequence.FromAscii("gbeng"), TagSequence.FromAscii("gbsct"), TagSequence.FromAscii("gbwls") });
 
             var count = 0;
-            foreach (var s in Data.RgiEmojiSequenceList)
+            foreach (var s in _data)
             {
                 var (tagCount, tags) = TagSequence.FromFlagSequence(s);
                 if (tagCount > 0)
@@ -66,12 +71,12 @@ namespace RgiSequenceFinder.Test
         }
 
         /// <summary>
-        /// <see cref="Data.RgiEmojiSequenceList"/> に入れた文字は全部「最後まで1つなぎの絵文字シーケンス」判定を受けるはず。
+        /// <see cref="_data"/> に入れた文字は全部「最後まで1つなぎの絵文字シーケンス」判定を受けるはず。
         /// </summary>
         [Fact]
         public void Rgi絵文字シーケンス全体をGetEmojiSequenceLengthにかける()
         {
-            foreach (var s in Data.RgiEmojiSequenceList)
+            foreach (var s in _data)
             {
                 var (type, length) = GraphemeBreak.GetEmojiSequence(s);
                 Assert.Equal(s.Length, length);
@@ -80,13 +85,13 @@ namespace RgiSequenceFinder.Test
         }
 
         /// <summary>
-        /// <see cref="Data.RgiEmojiSequenceList"/> 前後に無関係の文字を挟んでみて、ちゃんと絵文字シーケンスの部分だけ抜き出されてるか見てみる。
+        /// <see cref="_data"/> 前後に無関係の文字を挟んでみて、ちゃんと絵文字シーケンスの部分だけ抜き出されてるか見てみる。
         /// </summary>
         [Fact]
         public void Rgi絵文字シーケンスの前後にAsciiを挟んでからGetEmojiSequenceLengthにかける()
         {
             const string NonEmoji = "abc";
-            foreach (var s in Data.RgiEmojiSequenceList)
+            foreach (var s in _data)
             {
                 var s2 = NonEmoji + s + NonEmoji;
                 EmojiSequence emoji;

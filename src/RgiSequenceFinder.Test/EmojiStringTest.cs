@@ -7,13 +7,8 @@ namespace RgiSequenceFinder.Test
     public class EmojiStringTest : IAsyncLifetime
     {
         private EmojiDataRow[] _data = null!;
-
         public Task DisposeAsync() => Task.CompletedTask;
-
-        public async Task InitializeAsync()
-        {
-            _data = await DataCache.GetData().ConfigureAwait(false);
-        }
+        public async Task InitializeAsync() => _data = await DataCache.GetData().ConfigureAwait(false);
 
         [Fact]
         public void HashCode()

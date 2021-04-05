@@ -15,5 +15,8 @@ namespace RgiSequenceFinder.TableGenerator.Data
 
         private static EmojiDataRow[]? _data;
         public static EmojiDataRow[] Data => _data ??= EmojiDataRow.Load(Doc).ToArray();
+
+        private static string[]? _raw;
+        public static string[] RawData => _raw ??= EmojiDataRow.LoadAllStrings(Doc).ToArray();
     }
 }

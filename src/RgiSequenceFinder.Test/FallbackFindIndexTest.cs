@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace RgiSequenceFinder.Test
@@ -9,8 +10,12 @@ namespace RgiSequenceFinder.Test
     /// <summary>
     /// 過剰に FE0F がついてるとか、過剰に ZWJ でつながってるとか、RGI にないパターンで肌色選択が掛かってるのとかを分割したり余計な分を削ったりのテスト。
     /// </summary>
-    public class FallbackFindIndexTest
+    public class FallbackFindIndexTest : IAsyncLifetime
     {
+        private string[] _data = null!;
+        public Task DisposeAsync() => Task.CompletedTask;
+        public async Task InitializeAsync() => _data = await DataCache.GetRawData().ConfigureAwait(false);
+
         [Theory]
         [InlineData("✨")] // 2728, Sparkles
         [InlineData("❌")] // 274C, Cross Mark
@@ -27,7 +32,7 @@ namespace RgiSequenceFinder.Test
             Assert.Equal(emoji.Length, len);
 
             // 元データと照会。
-            var indexFromData = Data.RgiEmojiSequenceList.TakeWhile(x => x != emoji).Count();
+            var indexFromData = _data.TakeWhile(x => x != emoji).Count();
             Assert.Equal(indexFromData, indexes[0]);
 
             // FE0F 足してみる。

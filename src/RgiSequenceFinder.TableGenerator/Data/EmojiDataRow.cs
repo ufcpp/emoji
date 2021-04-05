@@ -30,27 +30,10 @@ namespace RgiSequenceFinder.TableGenerator
 
             Span<char> buffer = stackalloc char[Math.Max(utf32.Length, varUtf32?.Length ?? 0) * 2];
 
-            var len = 0;
-            var utf16 = buffer;
-            foreach (var r in utf32)
-            {
-                var w = r.EncodeToUtf16(utf16);
-                utf16 = utf16[w..];
-                len += w;
-            }
+            Utf16 = ToUtf16(utf32, buffer);
+            _emojiStr = ToEmoji(utf32, buffer);
 
-            Utf16 = new(buffer[..len]);
-
-            var estr = MemoryMarshal.Cast<char, ushort>(buffer);
-            len = EmojiString.FromUtf32(MemoryMarshal.Cast<Rune, int>(utf32), estr);
-
-            _emojiStr = estr[..len].ToArray();
-
-            if (varUtf32 is not null)
-            {
-                len = EmojiString.FromUtf32(MemoryMarshal.Cast<Rune, int>(varUtf32), estr);
-                _varEmojiStr = estr[..len].ToArray();
-            }
+            if (varUtf32 is not null) _varEmojiStr = ToEmoji(varUtf32, buffer);
         }
 
         public static IEnumerable<EmojiDataRow> Load(JsonDocument doc)
@@ -96,13 +79,55 @@ namespace RgiSequenceFinder.TableGenerator
                 }
             }
 
-            string readUnified(JsonElement elem)
+            static Rune[] parseUnified(JsonElement elem) => Parse(ReadUnified(elem));
+        }
+
+        public static IEnumerable<string> LoadAllStrings(JsonDocument doc)
+        {
+            foreach (var elem in doc.RootElement.EnumerateArray())
             {
-                if (elem.TryGetProperty("unified", out var unified) && unified.GetString() is { } us) return us;
-                throw new KeyNotFoundException();
+                yield return parseUnified(elem);
+
+                if (!elem.TryGetProperty("skin_variations", out var skinVariations)) continue;
+
+                foreach (var v in skinVariations.EnumerateObject())
+                {
+                    yield return parseUnified(v.Value);
+                }
             }
 
-            Rune[] parseUnified(JsonElement elem) => Parse(readUnified(elem));
+            static string parseUnified(JsonElement elem)
+            {
+                Span<char> buffer = stackalloc char[40];
+                return ToUtf16(Parse(ReadUnified(elem)), buffer);
+            }
+        }
+
+        private static string ToUtf16(Rune[] utf32, Span<char> buffer)
+        {
+            var len = 0;
+            var utf16 = buffer;
+            foreach (var r in utf32)
+            {
+                var w = r.EncodeToUtf16(utf16);
+                utf16 = utf16[w..];
+                len += w;
+            }
+
+            return new(buffer[..len]);
+        }
+
+        private static ushort[] ToEmoji(Rune[] utf32, Span<char> buffer)
+        {
+            var ubffer = MemoryMarshal.Cast<char, ushort>(buffer);
+            var len = EmojiString.FromUtf32(MemoryMarshal.Cast<Rune, int>(utf32), ubffer);
+            return ubffer[..len].ToArray();
+        }
+
+        private static string ReadUnified(JsonElement elem)
+        {
+            if (elem.TryGetProperty("unified", out var unified) && unified.GetString() is { } us) return us;
+            throw new KeyNotFoundException();
         }
 
         private static Rune[] Parse(string hyphenatedCodePoints)

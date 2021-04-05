@@ -1,18 +1,23 @@
 ﻿using System;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace RgiSequenceFinder.Test
 {
-    public class FindIndexTest
+    public class FindIndexTest : IAsyncLifetime
     {
+        private string[] _data = null!;
+        public Task DisposeAsync() => Task.CompletedTask;
+        public async Task InitializeAsync() => _data = await DataCache.GetRawData().ConfigureAwait(false);
+
         [Fact]
         public void Rgi絵文字シーケンス自体のインデックスは必ず見つかる()
         {
             Span<EmojiIndex> indexes = stackalloc EmojiIndex[1];
 
-            var data = Data.RgiEmojiSequenceList;
+            var data = _data;
 
             for (int i = 0; i < data.Length; i++)
             {
@@ -30,7 +35,7 @@ namespace RgiSequenceFinder.Test
         {
             Span<EmojiIndex> indexes = stackalloc EmojiIndex[1];
 
-            var data = Data.RgiEmojiSequenceList;
+            var data = _data;
 
             for (int i = 0; i < data.Length; i++)
             {
@@ -62,7 +67,7 @@ namespace RgiSequenceFinder.Test
             // 1F3FB～1F3FF は単体で RgiTable.Find に含まれているものの、GraphemeBreak 的には1個前の絵文字にくっついちゃう。
             Span<EmojiIndex> indexes = stackalloc EmojiIndex[1];
 
-            var data = Data.RgiEmojiSequenceList;
+            var data = _data;
             var sb = new StringBuilder();
 
             foreach (var s in data)
@@ -102,7 +107,7 @@ namespace RgiSequenceFinder.Test
         [Fact]
         public void 全RGI絵文字をConcatしたものをReplaceにかける()
         {
-            var data = Data.RgiEmojiSequenceList;
+            var data = _data;
             var sb = new StringBuilder();
 
             foreach (var s in data)

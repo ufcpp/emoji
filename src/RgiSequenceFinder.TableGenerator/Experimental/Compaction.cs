@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RgiSequenceFinder.TableGenerator.Data;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -75,7 +76,7 @@ namespace RgiSequenceFinder.TableGenerator.Experimental
 
         public static void CheckConversion()
         {
-            var list = RgiSequenceFinder.Data.RgiEmojiSequenceList;
+            var list = Cache.RawData;
             Span<char> buffer = stackalloc char[16];
             var convertedSequences = new List<string>();
 
