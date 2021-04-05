@@ -13,10 +13,10 @@ namespace RgiSequenceFinder.TableGenerator
         public int Index { get; }
         public int SkinVariation { get; }
 
-        private ushort[] _emojiStr;
-        private ushort[]? _varEmojiStr;
+        private readonly ushort[] _emojiStr;
+        private readonly ushort[]? _varEmojiStr;
 
-        private Rune[] _utf32;
+        private readonly Rune[] _utf32;
 
         public EmojiString EmojiString => new(_emojiStr);
         public EmojiString VariantEmojiString => new(_varEmojiStr);
