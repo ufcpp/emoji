@@ -1,5 +1,6 @@
 ﻿using EmojiData;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
@@ -66,11 +67,24 @@ namespace RgiSequenceFinder.TableGenerator.Experimental
             Console.WriteLine($"region: {categorized.RegionFlags.Count}");
             Console.WriteLine($"tag   : {categorized.TagFlags.Count}");
 
-            for (int x = 0; x < 4; x++)
-                for (int y = 0; y < 4; y++)
-                {
-                    Console.WriteLine($"len: {x + 1}, skin: {y}, count: {categorized.Others[x, y]?.Count ?? 0}");
-                }
+            Console.WriteLine("no skin variation");
+            for (int len = 0; len < 4; len++) write(categorized.OtherNoSkin, len);
+
+            Console.WriteLine("one skin variation");
+            for (int len = 0; len < 2; len++) write(categorized.OtherOneSkin, len);
+
+            Console.WriteLine("two skin variation (normal)");
+            for (int len = 0; len < 4; len++) write(categorized.OtherTwoSkin, len);
+
+            Console.WriteLine("two skin variation (holding hands)");
+            for (int len = 0; len < 4; len++) write(categorized.OtherVarTwoSkin, len);
+
+            void write(List<(ushort[] emoji, int index)>?[] array, int len)
+            {
+                var list = array[len];
+                if (list is null) return;
+                Console.WriteLine($"  len: {len + 1}, count: {list.Count}");
+            }
         }
     }
 }
