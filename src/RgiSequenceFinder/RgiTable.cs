@@ -28,6 +28,10 @@ namespace RgiSequenceFinder
             {
                 case EmojiSequenceType.Other:
                     {
+                        // 今、FE0F の有無は無関係で検索してる。
+                        // 本来 00A9 FE0F の時だけ絵文字になる 00A9 も絵文字判定する。
+                        // ©®‼⁉™〰〽㊗㊙ 辺り、特に©®の2文字(00A9 と 00AE) は逆に特殊対応してでも text/emoji style の出し分けできた方がいいかも。
+
                         var span = s.Slice(0, emoji.LengthInUtf16);
                         var i = FindOther(span, emoji.ZwjPositions);
 
@@ -39,8 +43,7 @@ namespace RgiSequenceFinder
 
                         // 素直に見つからなかったときの再検索
                         // - ZWJ で分割して再検索
-                        // - FE0F(異体字セレクター16)を消してみて再検索
-                        // - 1F3FB～1F3FF (肌色選択)を消してみて再検索 + 肌色自体の絵
+                        // - 1F3FB～1F3FF (肌色選択)ないはずの文字で再検索 + 肌色自体の絵
                         var written = SplitZwjSequence(emoji.ZwjPositions, span, indexes);
 
                         return (emoji.LengthInUtf16, written);
