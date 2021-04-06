@@ -8,10 +8,13 @@ namespace EmojiData
 {
     public class Loader
     {
+        const string RepositoryName = "iamcal/emoji-data";
+        const string BranchName = "56e5c532573edc8bdf8b16cb2e750e3cb383ad9d"; // 2021年3月。 Unicode 13.0。
+
         //todo: master/main じゃなくて、特定のコミットから取らないとある日突然変わるので困るはず。
         // あと、違う URL (違うコミット)から取ったときはローカルストレージのキャッシュ無効化しないと。
-        const string EmojiDataSourceUrl = "https://github.com/iamcal/emoji-data/raw/master/emoji.json";
-        const string CacheFileName = "emoji.json";
+        const string EmojiDataSourceUrl = "https://github.com/" + RepositoryName + "/raw/" + BranchName + "/emoji.json";
+        const string CacheFileName = BranchName + ".json";
 
         public static async ValueTask<byte[]> LoadBytesAsync()
         {
