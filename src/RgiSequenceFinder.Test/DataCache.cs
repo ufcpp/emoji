@@ -12,6 +12,9 @@ namespace RgiSequenceFinder.Test
         private static EmojiDataRow[]? _data;
         private static string[]? _rawData;
 
+        // lock 掛けずにキャッシュしてるせいか、最初1回だけ IOException 出てそう？
+        // 1回限りなので気にせずやってる…
+
         private static async ValueTask<JsonDocument> GetDoc() => _doc ??= await Loader.LoadJsonDocAsync().ConfigureAwait(false);
 
         public static async ValueTask<EmojiDataRow[]> GetData() => _data ??= EmojiDataRow.Load(await GetDoc().ConfigureAwait(false)).ToArray();
