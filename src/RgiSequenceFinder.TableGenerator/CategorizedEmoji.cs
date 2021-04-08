@@ -1,13 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RgiSequenceFinder.TableGenerator
 {
-    //todo: GroupedEmoji の置き換えなので動作確認取れたら GroupedEmoji の方消す。
-
     public struct CategorizedEmoji
     {
         /// <summary>
