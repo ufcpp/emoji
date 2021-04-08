@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Buffers.Binary;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 
 namespace RgiSequenceFinder
 {
@@ -53,6 +52,8 @@ namespace RgiSequenceFinder
         public static bool operator !=(Byte8 x, Byte8 y) => !x.Equals(y);
     }
 
+    // netstandard2.0 でさえなければ不要な unsafe。
+    // MemoryMarshal を使える。
     internal static class Byte8Extensions
     {
         public static unsafe Span<byte> AsSpan(ref this Byte8 tags) => new Span<byte>(Unsafe.AsPointer(ref tags.V0), 8);

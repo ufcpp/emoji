@@ -6,10 +6,10 @@ namespace RgiSequenceFinder
     /// RGI 絵文字シーケンスの辞書化、かなり条件を限定できるので専用のハッシュテーブルを作る。
     /// </summary>
     /// <remarks>
-    /// 条件:
+    /// RGI 絵文字シーケンスについてわかってる前提:
     /// - たかだか4000文字程度(Unicode 13.0 で3300文字)
     /// - 半分以上が <see cref="EmojiString"/> 化すると1文字になる
-    /// - <see cref="EmojiString"/> 化後の文字数の分布大体わかってて、最大でも4文字
+    /// - <see cref="EmojiString"/> 化後の文字数の分布が大体わかってて、最大でも4文字
     ///
     /// なので、
     /// - 文字列リテラルは全部連結したものを1個だけ渡す
@@ -32,7 +32,7 @@ namespace RgiSequenceFinder
         /// キーになる文字列を全部 concat したもの。
         /// キー1つ1つは固定長(長さは一律 <see cref="_utf16Length"/> になるように事前に GroupBy しておく想定)。
         ///
-        /// それぞれのキーが長さ1の時は <see cref="Bucket.KeyStart"/> に直接文字を入れてしまう(このフィールドは null)。
+        /// <see cref="_utf16Length"/> が1の時は <see cref="Bucket.KeyStart"/> に直接文字を入れてしまう(このフィールドは null)。
         /// </summary>
         private readonly ushort[] _concatinatedString;
 

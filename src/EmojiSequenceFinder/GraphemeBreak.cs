@@ -10,7 +10,7 @@ namespace RgiSequenceFinder
     /// これ、絵文字に限定すればここまで複雑な処理必要ないはずなので、簡易版みたいな判定をする。
     /// (サンスクリット、タイ文字、ハングル向けの処理不要＆ Extended_Pictographic の判定(辞書必須)をさぼれる。)
     ///
-    /// 文字数を返すメソッドが多くなるけど、全部 UTF-16 code unit 数(C# の string.Length)。
+    /// 文字数を返すメソッドが多くなるけど、全部 UTF-16 code unit 数(C# の string.Length) で返す。
     /// (UTF-8 byte 数、rune 数、grapheme 数ではない。)
     /// </summary>
     /// <remarks>
@@ -20,7 +20,7 @@ namespace RgiSequenceFinder
     /// Unicode 10.0 の時に grapheme cluster 分割のロジックを C# で書いたこともあり。
     /// https://github.com/ufcpp/GraphemeSplitter
     /// これ、prepend (サンスクリットで使う)だけ対応してなかったり。
-    /// あと、<see cref="System.Globalization.StringInfo"/> 公式対応が入ったので今後保守するつもりはない。
+    /// あと、GraphemeSplitter の方は <see cref="System.Globalization.StringInfo"/> 公式対応が入った今、保守を続けるつもりはない。
     /// </remarks>
     public class GraphemeBreak
     {
