@@ -86,12 +86,17 @@ namespace RgiSequenceFinder
         /// そうでないとき <see cref="SkinTone.None"/> を返す。
         /// </summary>
         /// <remarks>
-        /// UAX #29 の Extend を絵文字専用に判定。にも使う。
+        /// Fitzpatrick skin type も絵文字の闇。
+        /// こいつだけ「他の絵文字の後ろに直接くっつく」特殊仕様。
+        /// 後々の追加された絵文字シーケンスの場合は必ず前の絵文字との間に ZWJ を挟む仕様になってる。
+        /// 男女の選択は ZWJ + ♂、♀ だし、髪型選択は ZWJ + 1F9B0-1F9B3。
+        ///
+        /// UAX #29 の Extend の判定にも使ってる。
         ///
         /// Extend の大半は U+0301 の ́  みたいに「他の文字にくっつけて表示する0幅文字」みたいなの。
         /// 絵文字と組み合わせて表示できるレンダリング システムほとんどないと思うし、もちろん RGI にそんな文字含まれない。
         ///
-        /// 絵文字相手に使う Extend は実際のところ以下の6文字だけで、「skin tone かどうか」 + FE0F 判定になる。
+        /// 絵文字相手に使う Extend は実際のところ、skin tone か FE0F のどちらか。
         ///
         /// FE0F: 異体字セレクター16 (variation selector-16)
         /// 1F3FB-1F3FF: 肌色選択修飾子(emoji modifier Fitzpatrick、skin tone)
@@ -99,11 +104,6 @@ namespace RgiSequenceFinder
         /// skin tone は UTF-16 だと
         /// high surrogate が D83C、
         /// low surrogate が DFFB-DFFF。
-        ///
-        /// Fitzpatrick skin type も絵文字の闇。
-        /// こいつだけ「他の絵文字の後ろに直接くっつく」特殊仕様。
-        /// 後々の追加された絵文字シーケンスの場合は必ず前の絵文字との間に ZWJ を挟む仕様になってる。
-        /// 男女の選択は ZWJ + ♂、♀ だし、髪型選択は ZWJ + 1F9B0-1F9B3。
         /// </remarks>
         public static SkinTone IsSkinTone(ReadOnlySpan<char> s)
         {
@@ -165,6 +165,9 @@ namespace RgiSequenceFinder
         /// <see cref="GetEmojiSequence(ReadOnlySpan{char})"/> の主要処理。
         /// 「keycap と国旗を除けばだいぶシンプルになる」前提の Emoji ZWJ sequence 判定。
         /// </summary>
+        /// <remarks>
+        /// 後々 skin variation を調べるために skin tone (0～2個)の情報も <see cref="ZwjSplitResult"/> に含めて返してる。
+        /// </remarks>
         private static (int count, ZwjSplitResult zwjPositions) IsZwjSequence(ReadOnlySpan<char> s)
         {
             // ZWJ シーケンス。

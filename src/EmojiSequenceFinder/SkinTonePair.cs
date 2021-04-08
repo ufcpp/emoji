@@ -11,18 +11,6 @@
     /// - skin tone から計算できるオフセットを足す
     /// - RGI ZWJ sequence 中にある skin tone は1個か2個
     /// みたいな前提があるし、他のデータと一緒に1つの構造体にパッキングするんで1バイトに2 <see cref="SkinTone"/> を詰め込むことに。
-    ///
-    /// あと、RGI 判定の際に FE0F を無視する(含んでいたら削る)って処理もしたいけど、
-    /// 削る処理が必要かどうかを2度手間で探索したくないのでこの構造体に一緒に記録する。
-    /// skin tone と FE0F の判定は常に近い位置にある(grapheme breaking の仕様上、同じ Extend っていうくくりになってる)ので。
-    ///
-    /// ビットの使い方(上位ビットから順に):
-    /// - 1ビット: FE0F を含むかどうか
-    /// - 1ビット: 未使用
-    /// - 3ビット: tone2 + 1
-    /// - 3ビット: tone1 + 1
-    ///
-    /// tone を +1 してるのは、「付いていないときに 0」になるようにして長さを別途持たなくてもよくしてる。
     /// </remarks>
     public readonly struct SkinTonePair
     {
@@ -32,8 +20,7 @@
 
         public SkinTonePair(SkinTone tone1, SkinTone tone2)
         {
-            // tone がない時 -1 が来る前提。
-            // -2 とかみたいなのが来ると処理が狂う。
+            // SkinTone に -1 みたいな元々想定していない整数値が来ると狂うけど、直にエラー処理はしてない。
             Value = (byte)((byte)tone1 | ((byte)tone2 << 3));
         }
 
@@ -50,14 +37,14 @@
 
         /// <summary>
         /// <see cref="SkinTone"/> 1個目。
-        /// カップル絵文字とかで前の人の肌色。
+        /// holding hands 系絵文字とかで1人目の人の肌色。
         /// ZWJ sequence 的に、2符号点目に出てくる。
         /// </summary>
         public SkinTone Tone1 => (SkinTone)(Value & 0b111);
 
         /// <summary>
         /// <see cref="SkinTone"/> 2個目。
-        /// カップル絵文字とかで後の人の肌色。
+        /// holding hands 系絵文字とかで2人目の人の肌色。
         /// ZWJ sequence 的に、最後の符号点に出てくる。
         /// </summary>
         public SkinTone Tone2 => (SkinTone)((Value >> 3) & 0b111);

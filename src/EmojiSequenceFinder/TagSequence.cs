@@ -6,6 +6,9 @@ namespace RgiSequenceFinder
     /// <summary>
     /// Emoji tag sequence のタグ部分を相当する ASCII 文字列化したもの。
     /// 参考: http://unicode.org/reports/tr51/#def_std_emoji_tag_sequence_set
+    ///
+    /// 現状は国旗専用の仕様だけど、
+    /// 将来他の用途でも使うかもしれないので「flag sequence」じゃなくて「tag sequence」になってる。
     /// </summary>
     /// <remarks>
     /// 絵文字の闇その2。
@@ -56,9 +59,10 @@ namespace RgiSequenceFinder
         /// high surrogate が DB40、
         /// low surrogate が DC00-DC7F。
         ///
-        /// 将来他の用途でも使うかもしれないので「flag sequence」じゃなくて「tag sequence」になってる。
         /// 一応原理上は「東京都の旗」(🏴JP13)とかも出せる。
-        /// RGI に入ってるのはグレートブリテン島の3カントリーだけ(というかこのカントリー旗のためにこの仕様が入った)。
+        /// RGI に入ってるのはグレートブリテン島の3カントリーだけ。
+        /// (というかこのカントリー旗のためにこの仕様が入った。
+        /// サッカーリーグのチームとかがカントリーごとに分かれてるせいもあって、他の subdivision よりも圧倒的に需要が高いらしい。)
         ///
         /// タグ文字を使う仕様がこいつだけなので、これも先に判定してしまえば他の絵文字シーケンス処理から E0000 台の判定を消せる。
         /// </remarks>
@@ -97,7 +101,7 @@ namespace RgiSequenceFinder
 
         /// <summary>
         /// 普通に "gbsct" みたいな文字列から E0067-E0062-E0073-E0063-E0074-E007F に相当する <see cref="TagSequence"/> を作る。
-        /// (末尾に Cancel タグ(ESC 文字)も入れる。)
+        /// (末尾に Cancel タグ(ESC 文字)を追加する処理もメソッド内でやってる。)
         /// </summary>
         public static TagSequence FromAscii(ReadOnlySpan<char> s)
         {

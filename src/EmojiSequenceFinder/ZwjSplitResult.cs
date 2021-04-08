@@ -1,15 +1,14 @@
-﻿using System;
-
-namespace RgiSequenceFinder
+﻿namespace RgiSequenceFinder
 {
     /// <summary>
+    /// 書記素分割の際に ZWJ の位置を記録しておいて再探索を要らなくする。
     /// ZWJ 分割するときに一緒に skin tone の抽出をしておいた方が2度手間にならなくて計算量お得なので一緒に詰め込む。
     /// </summary>
     /// <remarks>
-    /// ZWJ の数もすぐに再利用したく、末尾から2番目に入れておくことにする。
-    ///
-    /// 中身に <see cref="Byte8"/> を使っているものの、
-    /// ZWJ 8つも入った文字、RGI には入らないだろうし、末尾1個を <see cref="SkinTonePair"/> で使うことにした。
+    /// <see cref="Byte8"/> の 0～5 要素目に位置を記録。
+    /// ZWJ の数もすぐに再利用したく、6 要素目に入れておくことにする。
+    /// 7 要素目に <see cref="SkinTonePair"/> を格納。
+    /// (ZWJ 7つ以上入った文字、RGI には入らないだろうし、末尾2要素を特殊用途に利用。)
     /// </remarks>
     public readonly struct ZwjSplitResult
     {

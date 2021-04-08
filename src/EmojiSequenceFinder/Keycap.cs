@@ -7,9 +7,10 @@ namespace RgiSequenceFinder
     /// 参考: https://unicode.org/reports/tr51/#def_std_emoji_keycap_sequence_set
     /// </summary>
     /// <remarks>
-    /// 絵文字シーケンスの中で唯一 ASCII 文字開始なたちの悪いシーケンスなので独立して判定。
+    /// 絵文字シーケンスの中で唯一 ASCII 文字開始だし、skin tone/FE0F 以外の Extend を含むタチの悪いシーケンスなので独立して判定。
     ///
-    /// 絶対 ASCII 1文字なので素の char とか byte でもいいんだけど、範囲チェックとか ToString とかを足しとく。
+    /// 先頭の1文字だけ返せば弁別可能で、その1文字は絶対に ASCII。
+    /// なので専用の構造体を作らず素の char とか byte で扱ってもいいんだけど、範囲チェックとか ToString とかを足しとく。
     /// </remarks>
     public readonly struct Keycap
     {
