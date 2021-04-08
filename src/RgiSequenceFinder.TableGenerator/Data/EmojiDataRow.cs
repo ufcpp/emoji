@@ -69,8 +69,6 @@ namespace RgiSequenceFinder.TableGenerator
 
                     yield return new(runes, index, 2, variantRunes);
 
-                    //todo: holding hands 系特殊対応。
-                    // varEmojiStr 取得
                     index += 26;
                 }
                 else
