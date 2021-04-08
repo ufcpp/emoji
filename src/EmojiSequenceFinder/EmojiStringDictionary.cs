@@ -56,7 +56,7 @@ namespace RgiSequenceFinder
         public EmojiStringDictionary(byte utf16Length, int capacity, ushort[] concatinatedString, ReadOnlySpan<ushort> indexes)
         {
             if (!isPowerOf2(capacity)) throw new ArgumentException("capacity must be power of 2.");
-            //todo: concatinatedString.Length * utf16Length == indexex.Length のはず
+            if (concatinatedString.Length != indexes.Length * utf16Length) throw new ArgumentException("length of string and indexes not matched.");
             //todo: capacity >= indexex.Length のはず
 
             _utf16Length = utf16Length;

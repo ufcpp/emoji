@@ -96,5 +96,28 @@ namespace RgiSequenceFinder.Test
                 });
             }
         }
+
+        [Fact]
+        public void CheckLength()
+        {
+            for (int count = 0; count < 100; count++)
+            {
+                for (int len = 1; len <= 4; len++)
+                {
+                    var capacity = 2 << BitOperations.Log2((uint)count - 1);
+                    _ = new EmojiStringDictionary((byte)len, capacity, new ushort[len * count], new ushort[count]);
+
+                    Assert.Throws<ArgumentException>(() =>
+                    {
+                        _ = new EmojiStringDictionary((byte)len, capacity, new ushort[len * count + 1], new ushort[count]);
+                    });
+
+                    Assert.Throws<ArgumentException>(() =>
+                    {
+                        _ = new EmojiStringDictionary((byte)len, capacity, new ushort[len * count], new ushort[count + 1]);
+                    });
+                }
+            }
+        }
     }
 }
