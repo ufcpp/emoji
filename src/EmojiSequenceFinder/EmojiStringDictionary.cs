@@ -55,7 +55,7 @@ namespace RgiSequenceFinder
 
         public EmojiStringDictionary(byte utf16Length, int capacity, ushort[] concatinatedString, ReadOnlySpan<ushort> indexes)
         {
-            //todo: capacity が2のべき乗になってるか確認
+            if (!isPowerOf2(capacity)) throw new ArgumentException("capacity must be power of 2.");
             //todo: concatinatedString.Length * utf16Length == indexex.Length のはず
             //todo: capacity >= indexex.Length のはず
 
@@ -84,6 +84,8 @@ namespace RgiSequenceFinder
                     total += utf16Length;
                 }
             }
+
+            bool isPowerOf2(int x) => (x & (x - 1)) == 0;
         }
 
         /// <summary>

@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 using Xunit;
@@ -74,6 +75,26 @@ namespace RgiSequenceFinder.Test
             var capacity = 1 << bits;
 
             return new((byte)utf16Len, capacity, concat, indexes);
+        }
+
+        [Fact]
+        public void CapacityMustBePowerOf2()
+        {
+            foreach (var i in new[] { 1, 2, 4, 8, 16, 32, 64 })
+            {
+                _ = new EmojiStringDictionary(1, i, new ushort[i], new ushort[i]);
+            }
+
+            foreach (var i in new[] { 3, 5, 6, 7, 9, 10, 11, 12, 13, 14, 15, 17, 18, 19, 20, 21, 22, 31, 33, 63, 65, 127, 1000 })
+            {
+                var n = 2 << BitOperations.Log2((uint)i - 1);
+                _ = new EmojiStringDictionary(1, n, new ushort[n], new ushort[n]);
+
+                Assert.Throws<ArgumentException>(() =>
+                {
+                    _ = new EmojiStringDictionary(1, i, new ushort[i], new ushort[i]);
+                });
+            }
         }
     }
 }
