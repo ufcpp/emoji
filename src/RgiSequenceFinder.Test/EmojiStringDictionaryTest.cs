@@ -119,5 +119,24 @@ namespace RgiSequenceFinder.Test
                 }
             }
         }
+
+        [Fact]
+        public void CheckCapacity()
+        {
+            for (int count = 2; count < 100; count++)
+            {
+                for (int len = 1; len <= 4; len++)
+                {
+                    var capacity = 2 << BitOperations.Log2((uint)count - 1);
+                    _ = new EmojiStringDictionary((byte)len, capacity, new ushort[len * count], new ushort[count]);
+
+                    Assert.Throws<ArgumentException>(() =>
+                    {
+                        var capacity = 1 << BitOperations.Log2((uint)count - 1);
+                        _ = new EmojiStringDictionary((byte)len, capacity, new ushort[len * count], new ushort[count]);
+                    });
+                }
+            }
+        }
     }
 }
