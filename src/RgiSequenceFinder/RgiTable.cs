@@ -148,9 +148,7 @@ namespace RgiSequenceFinder
 
 
         /// <summary>
-        /// Extend (FE0F と skin tone) 削り。
-        /// FE0F → ただ消す。
-        /// skin tone → 基本絵文字 + 肌色四角に分解。
+        /// 「本来 skin variation がない絵文字 + skin tone」なシーケンスをばらして、基本文字 + 肌色四角に分解。
         /// </summary>
         /// <returns><paramref name="indexes"/> に書き込んだ長さ。</returns>
         private static int ReduceExtends(ReadOnlySpan<char> s, Span<EmojiIndex> indexes, bool allowCharFallback)
