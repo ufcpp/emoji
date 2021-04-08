@@ -12,22 +12,28 @@ namespace RgiSequenceFinder
     ///
     /// 1F3F4-E0067-E0062-E0073-E0063-E0074-E007F であれば gbsct [ESC] の6文字。
     ///
-    /// タグ数が <see cref="Byte8.MaxLength"/> 以上のときは情報が切り捨てられるので注意
+    /// <see cref="Byte8.V7"/> にタグ長を入れてる。
+    ///
+    /// タグ数が <see cref="Byte8.MaxLength"/> - 1 以上のときは情報が切り捨てられるので注意
     /// (<see cref="EmojiSequence"/> 側で <see cref="EmojiSequenceType.MoreBufferRequired"/> 化してる)。
     ///
-    /// 逆にタグ数が  <see cref="Byte8.MaxLength"/> より少ない時(というか、現状6しかあり得ない)、後ろの方(現状、末尾2文字)は0詰め。
+    /// 逆にタグ数が  <see cref="Byte8.MaxLength"/> - 1 より少ない時(というか、現状6しかあり得ない)、後ろの方(現状、末尾1文字)は0詰め。
     ///
     /// 先頭の文字(現状の RGI では 🏴 (1F3F4) 以外ありえない)は今、単に削除しちゃってる。
-    /// 先頭文字を残すかどうかは後々というか、実際のところあり得ないとは思うけども、旗以外の emoji tag sequence が追加されたらまた改めて考える。
+    /// 先頭文字をこの型に含めるかどうかは後々というか、実際のところあり得ないとは思うけども、旗以外の emoji tag sequence が追加されたらまた改めて考える。
     /// </remarks>
     public readonly struct TagSequence : IEquatable<TagSequence>
     {
         // 現状、emoji tag sequence のタグが6文字以上の RGI 絵文字はないんだけど、
         // どうせ alignment で8に揃えられたりするので8バイト取っとく。
         private readonly Byte8 _bytes;
-        private TagSequence(Byte8 bytes) => _bytes = bytes;
+        private TagSequence(Byte8 bytes, int count)
+        {
+            bytes.V7 = (byte)count;
+            _bytes = bytes;
+        }
 
-        public ulong LongValue => _bytes.LongValue;
+        public ulong LongValue => _bytes.LongValue & 0x00FF_FFFF_FFFF_FFFF;
         public bool Equals(TagSequence other) => _bytes == other._bytes;
         public override bool Equals(object obj) => obj is TagSequence other && Equals(other);
         public override int GetHashCode() => _bytes.GetHashCode();
@@ -56,7 +62,7 @@ namespace RgiSequenceFinder
         ///
         /// タグ文字を使う仕様がこいつだけなので、これも先に判定してしまえば他の絵文字シーケンス処理から E0000 台の判定を消せる。
         /// </remarks>
-        public static (int tagLength, TagSequence tags) FromFlagSequence(ReadOnlySpan<char> s)
+        public static TagSequence FromFlagSequence(ReadOnlySpan<char> s)
         {
             if (s.Length < 2) return default;
 
@@ -84,7 +90,7 @@ namespace RgiSequenceFinder
 
             // 🏴 だけあって Tag が付いてないときと、🏴 もない時の区別は多分要らないと思う。
             // 1F3F4-200D-2620-FE0F (海賊旗)みたいな文字があるけど、それは ZWJ シーケンス判定の方で拾う。
-            return (i, new TagSequence(tags));
+            return new TagSequence(tags, i);
 
             bool isTagLowSurrogate(char c) => c >= (char)0xDC00 && c <= (char)0xDC7F;
         }
@@ -99,14 +105,14 @@ namespace RgiSequenceFinder
             var tagsSpan = tags.AsSpan();
 
             int i = 0;
-            for (; i < s.Length && i < 7; i++)
+            for (; i < s.Length && i < 6; i++)
             {
                 tagsSpan[i] = (byte)s[i];
             }
 
             tagsSpan[i] = 0x7F;
 
-            return new TagSequence(tags);
+            return new TagSequence(tags, i + 1);
         }
 
         public static string ToString(Byte8 tags)
@@ -116,12 +122,17 @@ namespace RgiSequenceFinder
             var sb = new StringBuilder();
             var span = tags.AsSpan();
 
-            foreach (var c in span)
+            foreach (var c in span.Slice(0, tags.V7))
             {
                 if (c == 0x7f || c == 0) break;
                 sb.Append((char)c);
             }
             return sb.ToString();
         }
+
+        /// <summary>
+        /// tag 長。
+        /// </summary>
+        public int Length => _bytes.V7;
     }
 }

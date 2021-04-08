@@ -59,8 +59,8 @@ namespace RgiSequenceFinder
             if (r.Value != 0) return new EmojiSequence(r);
 
             // Tag 国旗。
-            var (tagCount, tags) = TagSequence.FromFlagSequence(s);
-            if (tagCount != 0) return new EmojiSequence(tagCount, tags);
+            var tags = TagSequence.FromFlagSequence(s);
+            if (tags.LongValue != 0) return new EmojiSequence(tags);
 
             var (count, zwjs) = IsZwjSequence(s);
 
@@ -74,7 +74,7 @@ namespace RgiSequenceFinder
                 var st = IsSkinTone(s);
                 if (st > 0)
                 {
-                    return new EmojiSequence(count, st);
+                    return new EmojiSequence(st);
                 }
             }
 

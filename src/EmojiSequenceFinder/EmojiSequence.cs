@@ -55,15 +55,15 @@ namespace RgiSequenceFinder
             Region = region;
         }
 
-        public EmojiSequence(int tagLength, TagSequence tags)
+        public EmojiSequence(TagSequence tags)
             : this(
-                  tagLength > Byte8.MaxLength ? EmojiSequenceType.MoreBufferRequired : EmojiSequenceType.Tag,
-                  2 * tagLength + 2)
+                  tags.Length == Byte8.MaxLength ? EmojiSequenceType.MoreBufferRequired : EmojiSequenceType.Tag,
+                  2 * tags.Length + 2)
         {
             Tags = tags;
         }
 
-        public EmojiSequence(int count, SkinTone skinTone) : this(EmojiSequenceType.SkinTone, count)
+        public EmojiSequence(SkinTone skinTone) : this(EmojiSequenceType.SkinTone, 2)
         {
             SkinTone = skinTone;
         }

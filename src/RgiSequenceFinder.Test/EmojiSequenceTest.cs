@@ -58,8 +58,8 @@ namespace RgiSequenceFinder.Test
             var count = 0;
             foreach (var s in _data)
             {
-                var (tagCount, tags) = TagSequence.FromFlagSequence(s);
-                if (tagCount > 0)
+                var tags = TagSequence.FromFlagSequence(s);
+                if (tags.LongValue != 0)
                 {
                     ++count;
 
