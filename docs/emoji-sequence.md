@@ -51,3 +51,25 @@ RGI に入っている絵文字シーケンスは Unicode 13.0 時点で3300文�
 [愚直に `string` キーのリスト](https://github.com/iamcal/emoji-data/blob/master/emoji.json)にしたりでもなんとかなる。
 
 処理の都合上、`string` で閉じて(`string` 引数で渡して `string` 戻り値を返す)処理したいこともあるけど、4・5000文字なら U+E000～F8FF の[外字領域](http://www.asahi-net.or.jp/~ax2s-kmtn/ref/unicode/private.html)(6400文字)に置換とかで処理できそう。
+
+## 画像の利用
+
+前述の通り、OS レベルで対応できない場合は何かしら画像を用意して、絵文字の文字コードを画像に差し替える処理が必要。
+状況としては例えば以下のようなものあり。
+
+- Unity (ゲームエンジン)みたいに OS のテキストレンダリングを直接呼びづらい(呼ぶと描画負荷的にきつい)フレームワークがある
+- 自社で絵柄をコントロールしたい場合がある
+
+[Emojipedia](https://emojipedia.org/)なんかを見てもらえばわかる通り、OS ベンダー(Microsoft, Apple, Google)が自社で絵文字を描いてる他、Twitter, Facebook, WhatsApp 等の SNS も自前の画像を持ってることが多い。
+
+とはいえ、3000文字以上(色違いを除外しても1000文字以上)の画像を自前で用意するのは大変だし、
+既存の画像をそのまま使わせてもらうことも多い。
+
+ただ、気を付けないといけないのは、絵文字の画像にはライセンスがある。
+(フォントの書体(よっぽどのことがないと著作権が認められない)なのか絵なのかみたいなレベルでグレーみたい。)
+
+ライセンスが不明瞭なものは使わない方が無難なので、大体は [Apache 2 の Google 絵文字](https://github.com/googlefonts/noto-emoji/blob/main/LICENSE)か [CC-BY 4.0 の Twitter 絵文字](https://github.com/twitter/twemoji/blob/gh-pages/LICENSE-GRAPHICS) の2択。
+ぱっと絵柄を見てみた感じだと、Discord は Twitter 絵文字、Slack は Google 絵文字を使ってそう。
+
+一応、「iOS 上でだけは Apple 絵文字を使う」みたいな処理をしているアプリもあるものの、
+「スクショに絵文字を映したら審査に落ちた」という事例もあるらしいので注意。
