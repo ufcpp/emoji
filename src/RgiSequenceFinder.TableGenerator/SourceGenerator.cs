@@ -48,11 +48,10 @@ namespace RgiSequenceFinder.TableGenerator
                 WriterEmojiDictionary(writer, "noSkin4", emojis.OtherNoSkin[3]);
                 WriterEmojiDictionary(writer, "oneSkin1", emojis.OtherOneSkin[0]);
                 WriterEmojiDictionary(writer, "oneSkin2", emojis.OtherOneSkin[1]);
-
-                // Unicode 13.0 時点、これだけでいいはず。
-                // 13.1 で [3] も必要。
-                WriterEmojiDictionary(writer, "twoSkin3", emojis.OtherTwoSkin[2]); // 現状1文字しかないので Dictionary 作るの多少もったいない。
+                WriterEmojiDictionary(writer, "twoSkin3", emojis.OtherTwoSkin[2]);
+                WriterEmojiDictionary(writer, "twoSkin4", emojis.OtherTwoSkin[3]);
                 WriterEmojiDictionary(writer, "varTwoSkin3", emojis.OtherVarTwoSkin[2]);
+                WriterEmojiDictionary(writer, "varTwoSkin4", emojis.OtherVarTwoSkin[3]);
 
                 WriteFooter(writer);
             }
