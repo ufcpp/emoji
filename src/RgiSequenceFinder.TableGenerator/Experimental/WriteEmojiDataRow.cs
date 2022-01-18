@@ -1,10 +1,5 @@
-﻿using EmojiData;
-using RgiSequenceFinder.TableGenerator.Data;
-using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using RgiSequenceFinder.TableGenerator.Data;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace RgiSequenceFinder.TableGenerator.Experimental
 {

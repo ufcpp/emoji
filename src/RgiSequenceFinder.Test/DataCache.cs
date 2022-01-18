@@ -1,8 +1,6 @@
 ﻿using EmojiData;
 using RgiSequenceFinder.TableGenerator;
-using System.Linq;
 using System.Text.Json;
-using System.Threading.Tasks;
 
 namespace RgiSequenceFinder.Test
 {

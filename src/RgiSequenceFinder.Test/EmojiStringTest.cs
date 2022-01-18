@@ -1,5 +1,4 @@
 ﻿using RgiSequenceFinder.TableGenerator;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace RgiSequenceFinder.Test

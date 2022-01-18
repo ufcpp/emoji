@@ -1,7 +1,4 @@
 ﻿using RgiSequenceFinder.TableGenerator.Data;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace RgiSequenceFinder.TableGenerator.Experimental
 {
