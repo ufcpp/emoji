@@ -34,8 +34,9 @@ namespace RgiSequenceFinder.Test
                 ToDictionary(categorized.OtherOneSkin[0], 1),
                 ToDictionary(categorized.OtherOneSkin[1], 2),
                 ToDictionary(categorized.OtherTwoSkin[2], 3),
+                ToDictionary(categorized.OtherTwoSkin[3], 4),
                 ToDictionary(categorized.OtherVarTwoSkin[2], 3),
-                // Unicode 13.1 になったら OtherTwoSkin[3], OtherVarTwoSkin[3] も必要なはず。
+                ToDictionary(categorized.OtherVarTwoSkin[3], 4),
             };
 
             foreach (var x in _rawData)

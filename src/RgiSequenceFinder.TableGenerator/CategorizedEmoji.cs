@@ -63,7 +63,9 @@ namespace RgiSequenceFinder.TableGenerator
         /// 元々1符号点でカップルを作ってしまったけども skin variation を足すにあたって 
         /// 1F469 200D 1F91D 200D 1F468 にした上でこれの両端に skin tone を付けるみたいにしたやつがいる。
         ///
-        /// 1F46B に直接 skin tone 1個付いたバージョンは <see cref="OtherOneSkin"/> に入れる。
+        /// 両端が同性のやつ×5 と、異性のやつ×20 とかに分かれてる。
+        /// 両端が同性のやつ(1F46B に直接 skin tone 1個付いたバージョン)は <see cref="OtherOneSkin"/> に入って、
+        /// こっちは異性のやつだけ入る。
         ///
         /// 1F469 200D 1F91D 200D 1F468  の方を使って「skin tone 2個が異なる種類の場合の20種」だけが並んでて、
         /// それをこのリストに入れる。
