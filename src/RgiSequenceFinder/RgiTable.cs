@@ -251,6 +251,8 @@ namespace RgiSequenceFinder
             else if (len == 3)
             {
                 if (_noSkin4Table.GetValue(s) is ushort a && noTone) return a;
+                else if (_twoSkin4Table.GetValue(s) is ushort b) return b + twoOffset(zwjs.SkinTones);
+                else if (_varTwoSkin4Table.GetValue(s) is ushort c) return c + varTwoOffset(zwjs.SkinTones);
             }
             return -1;
 
