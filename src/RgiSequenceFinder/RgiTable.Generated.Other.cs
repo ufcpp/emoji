@@ -27,8 +27,14 @@ namespace RgiSequenceFinder
         private static readonly EmojiStringDictionary _twoSkin3Table = new EmojiStringDictionary(3, 16,
             new ushort[] { 0x1468, 0x2764, 0x1468, 0x1469, 0x2764, 0x1468, 0x1469, 0x2764, 0x1469, 0x19D1, 0x191D, 0x19D1, },
             new ushort[] { 998, 1210, 1236, 2938, });
+        private static readonly EmojiStringDictionary _twoSkin4Table = new EmojiStringDictionary(4, 16,
+            new ushort[] { 0x1468, 0x2764, 0x148B, 0x1468, 0x1469, 0x2764, 0x148B, 0x1468, 0x1469, 0x2764, 0x148B, 0x1469, },
+            new ushort[] { 1024, 1262, 1288, });
         private static readonly EmojiStringDictionary _varTwoSkin3Table = new EmojiStringDictionary(3, 16,
             new ushort[] { 0x1469, 0x191D, 0x1468, 0x1468, 0x191D, 0x1468, 0x1469, 0x191D, 0x1469, 0x19D1, 0x2764, 0x19D1, },
             new ushort[] { 1321, 1347, 1373, 1654, });
+        private static readonly EmojiStringDictionary _varTwoSkin4Table = new EmojiStringDictionary(4, 4,
+            new ushort[] { 0x19D1, 0x2764, 0x148B, 0x19D1, },
+            new ushort[] { 1627, });
     }
 }
