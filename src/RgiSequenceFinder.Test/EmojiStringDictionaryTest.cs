@@ -30,8 +30,9 @@ public class EmojiStringDictionaryTest : IAsyncLifetime
                 ToDictionary(categorized.OtherOneSkin[1], 2),
                 ToDictionary(categorized.OtherTwoSkin[2], 3),
                 ToDictionary(categorized.OtherTwoSkin[3], 4),
-                ToDictionary(categorized.OtherVarTwoSkin[2], 3),
-                ToDictionary(categorized.OtherVarTwoSkin[3], 4),
+                ToDictionary(categorized.OtherVarTwoSkin[1], 2), // handshake
+                ToDictionary(categorized.OtherVarTwoSkin[2], 3), // people holding hands
+                ToDictionary(categorized.OtherVarTwoSkin[3], 4), // couple with heart
             };
 
         foreach (var x in _rawData)
