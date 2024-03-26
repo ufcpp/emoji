@@ -74,9 +74,9 @@ public readonly struct CategorizedEmoji
 
     public CategorizedEmoji(IEnumerable<EmojiDataRow> emojis)
     {
-        var keycaps = Keycaps = new();
-        var regionFlags = RegionFlags = new();
-        var tagFlags = TagFlags = new();
+        var keycaps = Keycaps = [];
+        var regionFlags = RegionFlags = [];
+        var tagFlags = TagFlags = [];
         var skinTones = SkinTones = new int[5];
         var otherNoSkin = OtherNoSkin = new List<(ushort[] emoji, int index)>[4];
         var otherOneSkin = OtherOneSkin = new List<(ushort[] emoji, int index)>[2];
@@ -85,7 +85,7 @@ public readonly struct CategorizedEmoji
 
         static void addOther(List<(ushort[] emoji, int index)>[] list, EmojiString emoji, int index)
         {
-            (list[emoji.Raw.Length - 1] ??= new()).Add((emoji.Raw.ToArray(), index));
+            (list[emoji.Raw.Length - 1] ??= []).Add((emoji.Raw.ToArray(), index));
         }
 
         foreach (var row in emojis)

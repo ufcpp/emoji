@@ -11,7 +11,7 @@ public class EmojiSequenceTest : IAsyncLifetime
     [Fact]
     public void TestKeycap()
     {
-        var keys = new HashSet<byte>(new[] { (byte)'*', (byte)'#', (byte)'0', (byte)'1', (byte)'2', (byte)'3', (byte)'4', (byte)'5', (byte)'6', (byte)'7', (byte)'8', (byte)'9', });
+        var keys = new HashSet<byte>("*#0123456789"u8.ToArray());
 
         var count = 0;
         foreach (var s in _data)
@@ -49,7 +49,7 @@ public class EmojiSequenceTest : IAsyncLifetime
     public void TestTagSequence()
     {
         // 現行の RGI だと gbeng, gbsct, gbwls の3つだけのはず。
-        var subdivitions = new HashSet<TagSequence>(new[] { TagSequence.FromAscii("gbeng"), TagSequence.FromAscii("gbsct"), TagSequence.FromAscii("gbwls") });
+        var subdivitions = new HashSet<TagSequence>([TagSequence.FromAscii("gbeng"), TagSequence.FromAscii("gbsct"), TagSequence.FromAscii("gbwls")]);
 
         var count = 0;
         foreach (var s in _data)
