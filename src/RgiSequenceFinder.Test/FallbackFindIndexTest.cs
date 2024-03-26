@@ -204,6 +204,32 @@ public class FallbackFindIndexTest : IAsyncLifetime
     }
 
     [Fact]
+    public void コーナーケース()
+    {
+        string[] emojis = [
+            // ZWJが3つのケース
+            // Family: Adult, Adult, Child, Child
+            // 1F9D1, 200D, 1F9D1, 200D, 1F9D2, 200D, 1F9D2
+            "🧑‍🧑‍🧒‍🧒",
+            // Skin Tone 1つ、ZWJ 2つのケース。
+            // Woman in Motorized Wheelchair Facing Right: Medium-Dark Skin Tone
+            // 1F469, 1F3FE, 200D, 1F9BC, 200D, 27A1, FE0F
+            "👩🏾‍🦼‍➡️",
+            // Skin Tone 2つ、ZWJ 3つのケース
+            // kiss: person, person, medium-light skin tone, medium skin tone
+            // 1F9D1, 1F3FC, 200D, 2764, FE0F, 200D, 1F48B, 200D, 1F9D1, 1F3FD
+            "🧑🏼‍❤️‍💋‍🧑🏽",
+        ];
+
+        var indexes = (stackalloc EmojiIndex[12]);
+        foreach (var s in emojis)
+        {
+            var (read, written) = RgiTable.Find(s, indexes);
+            Assert.Equal(1, written);
+        }
+    }
+
+    [Fact]
     public void 未サポートZWJ肌色シーケンス()
     {
         // 👩🏻‍👩🏿‍👧🏼‍👧🏾
@@ -213,6 +239,8 @@ public class FallbackFindIndexTest : IAsyncLifetime
         //
         // 一方で、 RGI 的には Unicode 12.0 以降、カップル絵文字までは肌色の組み合わせ(5×5)に対応したけど、さすがに3人以上の家族絵文字は適用外。
         // この場合、👩🏻👩🏿👧🏼👧🏾 (ZWJ を除去したもの)と同じ結果を生んでほしい。
+        //
+        // Unicode 15.1 で4人家族に対応したけど、さすがに肌色のバリエーションまでは未対応。
 
         var family = "👩🏻‍👩🏿‍👧🏼‍👧🏾";
 
