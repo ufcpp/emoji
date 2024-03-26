@@ -60,7 +60,7 @@ public class EmojiDataRow
                 // holding hands 系特殊処理。
                 if (runes.Length == 1)
                 {
-                    var variant = skinVariations.EnumerateObject().ElementAt(6);
+                    var variant = skinVariations.EnumerateObject().ElementAt(5);
                     variantRunes = parseUnified(variant.Value);
                 }
 
