@@ -116,7 +116,7 @@ public class FindIndexTest : IAsyncLifetime
         var cat = sb.ToString().AsSpan();
 
         var buffer = new char[cat.Length];
-        var written = Finder.Replace(cat, buffer, false);
+        var written = Finder.Replace(cat, buffer, ReplaceMode.None);
 
         foreach (var c in buffer[..written])
         {
@@ -124,12 +124,20 @@ public class FindIndexTest : IAsyncLifetime
         }
 
         // ゼロ幅スペース埋め版
-        written = Finder.Replace(cat, buffer, true);
+        written = Finder.Replace(cat, buffer, ReplaceMode.FillsZwsp);
 
         foreach (var c in buffer[..written])
         {
             Assert.True(c is 'a' or (>= '\uE000' and < '\uF900') or '\u200B');
         }
         Assert.Equal(cat.Length, written);
+
+        // Remove
+        written = Finder.Replace(cat, buffer, ReplaceMode.Remove);
+
+        foreach (var c in buffer[..written])
+        {
+            Assert.True(c is 'a');
+        }
     }
 }

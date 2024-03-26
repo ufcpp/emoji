@@ -33,7 +33,7 @@ namespace RgiSequenceFinder
         /// <paramref name="destination"/> に書き込んだ文字列長。
         /// ただし、<paramref name="source"/> と1文字も変更がなかった場合は0を返す。
         /// </returns>
-        public static int Replace(ReadOnlySpan<char> source, Span<char> destination, bool fillsZwsp = true)
+        public static int Replace(ReadOnlySpan<char> source, Span<char> destination, ReplaceMode mode = ReplaceMode.FillsZwsp)
         {
             const char StartChar = '\uE000'; // private use area の先頭文字。
 
@@ -67,7 +67,7 @@ namespace RgiSequenceFinder
                     {
                         var index = indexes[i];
 
-                        if (index.IsIndex)
+                        if (index.IsIndex && mode != ReplaceMode.Remove)
                         {
                             destination[charWritten] = (char)(StartChar + index.Index);
                             ++charWritten;
@@ -78,7 +78,7 @@ namespace RgiSequenceFinder
                         }
                     }
 
-                    if (fillsZwsp)
+                    if (mode == ReplaceMode.FillsZwsp)
                     {
                         // 元のシーケンスと文字数を合わせるためにゼロ幅スペース埋めるという非常手段。
                         for (; charWritten < read; charWritten++)
