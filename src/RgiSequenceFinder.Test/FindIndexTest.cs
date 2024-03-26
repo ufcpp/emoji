@@ -57,13 +57,11 @@ public class FindIndexTest : IAsyncLifetime
         }
     }
 
-    [Fact]
-    public void 全RGI絵文字をConcat()
-    {
-        // 間に何も挟まずに Concat するバージョンも欲しいものの… 肌色セレクターが邪魔。
-        // 1F3FB～1F3FF は単体で RgiTable.Find に含まれているものの、GraphemeBreak 的には1個前の絵文字にくっついちゃう。
-        Span<EmojiIndex> indexes = stackalloc EmojiIndex[1];
+    private string Concatenated => _concatenated ??= ConcatData();
+    private string? _concatenated;
 
+    private string ConcatData()
+    {
         var data = _data;
         var sb = new StringBuilder();
 
@@ -73,7 +71,18 @@ public class FindIndexTest : IAsyncLifetime
             sb.Append('a');
         }
 
-        var cat = sb.ToString().AsSpan();
+        return sb.ToString();
+    }
+
+    [Fact]
+    public void 全RGI絵文字をConcat()
+    {
+        // 間に何も挟まずに Concat するバージョンも欲しいものの… 肌色セレクターが邪魔。
+        // 1F3FB～1F3FF は単体で RgiTable.Find に含まれているものの、GraphemeBreak 的には1個前の絵文字にくっついちゃう。
+        Span<EmojiIndex> indexes = stackalloc EmojiIndex[1];
+
+        var data = _data;
+        var cat = Concatenated.AsSpan();
 
         var odd = false;
         var i = 0;
@@ -104,17 +113,7 @@ public class FindIndexTest : IAsyncLifetime
     [Fact]
     public void 全RGI絵文字をConcatしたものをReplaceにかける()
     {
-        var data = _data;
-        var sb = new StringBuilder();
-
-        foreach (var s in data)
-        {
-            sb.Append(s);
-            sb.Append('a');
-        }
-
-        var cat = sb.ToString().AsSpan();
-
+        var cat = Concatenated.AsSpan();
         var buffer = new char[cat.Length];
         var written = Finder.Replace(cat, buffer, ReplaceMode.None);
 
@@ -122,18 +121,28 @@ public class FindIndexTest : IAsyncLifetime
         {
             Assert.True(c is 'a' or (>= '\uE000' and < '\uF900'));
         }
+    }
 
-        // ゼロ幅スペース埋め版
-        written = Finder.Replace(cat, buffer, ReplaceMode.FillsZwsp);
+    [Fact]
+    public void 全RGI絵文字をConcatしたものをReplaceにかけるゼロ幅スペース埋め()
+    {
+        var cat = Concatenated.AsSpan();
+        var buffer = new char[cat.Length];
+        var written = Finder.Replace(cat, buffer, ReplaceMode.FillsZwsp);
 
         foreach (var c in buffer[..written])
         {
             Assert.True(c is 'a' or (>= '\uE000' and < '\uF900') or '\u200B');
         }
         Assert.Equal(cat.Length, written);
+    }
 
-        // Remove
-        written = Finder.Replace(cat, buffer, ReplaceMode.Remove);
+    [Fact]
+    public void 全RGI絵文字をConcatしたものをRemoveかける()
+    {
+        var cat = Concatenated.AsSpan();
+        var buffer = new char[cat.Length];
+        var written = Finder.Replace(cat, buffer, ReplaceMode.Remove);
 
         foreach (var c in buffer[..written])
         {
