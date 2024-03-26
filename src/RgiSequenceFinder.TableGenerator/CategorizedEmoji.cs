@@ -79,7 +79,7 @@ public readonly struct CategorizedEmoji
         var tagFlags = TagFlags = [];
         var skinTones = SkinTones = new int[5];
         var otherNoSkin = OtherNoSkin = new List<(ushort[] emoji, int index)>[4];
-        var otherOneSkin = OtherOneSkin = new List<(ushort[] emoji, int index)>[2];
+        var otherOneSkin = OtherOneSkin = new List<(ushort[] emoji, int index)>[3]; // 🏃‍♀‍➡️ (Unicode 15.1 以降)の3文字が最大かな。
         var otherTwoSkin = OtherTwoSkin = new List<(ushort[] emoji, int index)>[4];
         var otherVarTwoSkin = OtherVarTwoSkin = new List<(ushort[] emoji, int index)>[4];
 

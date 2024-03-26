@@ -44,6 +44,7 @@ class SourceGenerator
             WriterEmojiDictionary(writer, "noSkin4", emojis.OtherNoSkin[3]);
             WriterEmojiDictionary(writer, "oneSkin1", emojis.OtherOneSkin[0]);
             WriterEmojiDictionary(writer, "oneSkin2", emojis.OtherOneSkin[1]);
+            WriterEmojiDictionary(writer, "oneSkin3", emojis.OtherOneSkin[2]);
             WriterEmojiDictionary(writer, "twoSkin3", emojis.OtherTwoSkin[2]);
             WriterEmojiDictionary(writer, "twoSkin4", emojis.OtherTwoSkin[3]);
             WriterEmojiDictionary(writer, "varTwoSkin2", emojis.OtherVarTwoSkin[1]);

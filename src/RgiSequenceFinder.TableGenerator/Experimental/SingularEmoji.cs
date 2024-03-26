@@ -17,6 +17,7 @@ class SingularEmoji
         CollisionCount(cat.OtherNoSkin[3].Select(t => t.emoji).ToArray());
         CollisionCount(cat.OtherOneSkin[0].Select(t => t.emoji).ToArray());
         CollisionCount(cat.OtherOneSkin[1].Select(t => t.emoji).ToArray());
+        CollisionCount(cat.OtherOneSkin[2].Select(t => t.emoji).ToArray());
 
         // この2種はそれぞれ1個、3個しかないし下手にハッシュテーブル使うより線形探索の方がいいかも。
         // (Unicode 13.1 でそれぞれ3個、9個になるかも。それでもまあ。)

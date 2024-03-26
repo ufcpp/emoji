@@ -246,8 +246,9 @@ namespace RgiSequenceFinder
             else if (len == 2)
             {
                 if (_noSkin3Table.GetValue(s) is ushort a && noTone) return a;
-                else if (_twoSkin3Table.GetValue(s) is ushort b) return b + twoOffset(zwjs.SkinTones);
-                else if (_varTwoSkin3Table.GetValue(s) is ushort c) return c + varTwoOffset(zwjs.SkinTones);
+                else if (_oneSkin3Table.GetValue(s) is ushort b) return b + oneOffset(zwjs.SkinTones);
+                else if (_twoSkin3Table.GetValue(s) is ushort c) return c + twoOffset(zwjs.SkinTones);
+                else if (_varTwoSkin3Table.GetValue(s) is ushort d) return d + varTwoOffset(zwjs.SkinTones);
             }
             else if (len == 3)
             {
