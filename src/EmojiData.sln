@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31025.218
+# Visual Studio Version 17
+VisualStudioVersion = 17.10.34707.107
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EmojiData", "EmojiData\EmojiData.csproj", "{5D66A2F1-4759-4541-ABDD-EE187A25B150}"
 EndProject
@@ -11,9 +11,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RgiSequenceFinder.Test", "R
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RgiSequenceFinder.TableGenerator", "RgiSequenceFinder.TableGenerator\RgiSequenceFinder.TableGenerator.csproj", "{C1FB7CCA-6B05-4DAE-970D-69A71F8AD1BE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmojiDataLoader", "EmojiDataLoader\EmojiDataLoader.csproj", "{2CE976EE-4A20-41D8-AE4C-B9EE4A3AB42F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EmojiDataLoader", "EmojiDataLoader\EmojiDataLoader.csproj", "{2CE976EE-4A20-41D8-AE4C-B9EE4A3AB42F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmojiSequenceFinder", "EmojiSequenceFinder\EmojiSequenceFinder.csproj", "{2751BD64-8FE3-482B-BA7C-BE41A061994C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EmojiSequenceFinder", "EmojiSequenceFinder\EmojiSequenceFinder.csproj", "{2751BD64-8FE3-482B-BA7C-BE41A061994C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".solution items", ".solution items", "{A6CB73B6-9C1B-4A89-BCF6-BAF3D20B57AA}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		Directory.build.targets = Directory.build.targets
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
