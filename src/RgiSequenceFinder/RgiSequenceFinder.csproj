@@ -1,13 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
-    <!--
-    <LangVersion>latest</LangVersion>
-    
-    Unity 2018, 2019 をサポート対象にするかもしれないのでバージョンを下げる
-    -->
-    <LangVersion>7.3</LangVersion>
+    <TargetFramework>$(UnityFramework)</TargetFramework>
+    <LangVersion>$(UnityLangVersion)</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>

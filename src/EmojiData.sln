@@ -18,6 +18,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".solution items", ".solution items", "{A6CB73B6-9C1B-4A89-BCF6-BAF3D20B57AA}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
+		Directory.build.props = Directory.build.props
 		Directory.build.targets = Directory.build.targets
 	EndProjectSection
 EndProject

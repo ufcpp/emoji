@@ -1,6 +1,6 @@
 <Project>
 
-  <PropertyGroup Condition="'$(TargetFramework)' != 'netstandard2.0'">
+  <PropertyGroup Condition="'$(TargetFramework)' != '$(UnityFramework)'">
     <Nullable>enable</Nullable>
     <ImplicitUsings>true</ImplicitUsings>
   </PropertyGroup>

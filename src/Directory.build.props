@@ -1,0 +1,9 @@
+<Project>
+
+  <PropertyGroup>
+    <LatestFramework>net8.0</LatestFramework>
+    <UnityFramework>netstandard2.1</UnityFramework>
+    <UnityLangVersion>9.0</UnityLangVersion>
+  </PropertyGroup>
+
+</Project>
