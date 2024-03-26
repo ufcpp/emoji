@@ -9,4 +9,7 @@
     <ProjectReference Include="..\EmojiSequenceFinder\EmojiSequenceFinder.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <InternalsVisibleTo Include="RgiSequenceFinder.Test"/>
+  </ItemGroup>
 </Project>
