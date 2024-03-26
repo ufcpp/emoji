@@ -72,13 +72,7 @@ class HashCode
         .Select(x => new Rune(x))
         .ToArray();
 
-    private static readonly Rune[] _skinTones =
-        Enumerable.Range(0x1F3FB, 5)
-        .Select(x => new Rune(x))
-        .ToArray();
-
     private const char _zwj = '\u200D';
-    private const char _fe0f = '\uFE0F';
 #else
         private static readonly Rune[] _emojiBaseCandidates =
             Enumerable.Range(0x202C, 0x3300 - 0x202C)
@@ -86,10 +80,7 @@ class HashCode
             .Select(x => new Rune(x))
             .ToArray();
 
-        private static readonly Rune[] _skinTones = new[] { 65423, 65437, 65447, 65449, 65479   }.Select(x => new Rune(x)).ToArray();
-
         private const char _zwj = (char)65497;
-        private const char _fe0f = (char)65519;
 #endif
 
     // 「単独で絵文字の候補 + 肌色 or FE0F」は最大で UTF-16 5文字。
