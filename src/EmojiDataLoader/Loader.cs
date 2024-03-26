@@ -5,44 +5,53 @@ namespace EmojiData;
 
 public class Loader
 {
+    public static IReadOnlyList<(string branchName, string version)> Branches => _branches;
+
+    private static readonly (string branchName, string version)[] _branches =
+    [
+        ("a8174c74675355c8c6a9564516b2e961fe7257ef", "15.1"), // 2024年2月。
+        ("0669bda2b9348984eeb4ce66215819bf61c35811", "15.0"), // 2023年5月。
+        ("1ddc9ca67c1379c372b4ca39824659f71caa2825", "14.0"), // 2022年3月。
+        ("675515762babff57a8d9c05f420806f1354203c3", "13.1"), // 2022年1月。
+        ("56e5c532573edc8bdf8b16cb2e750e3cb383ad9d", "13.0"), // 2021年3月。
+        ("cff32eea1d876e4c4a73c87ebc2fa218775de58f", "12.1"), // 2020年1月。
+    ];
+
     const string RepositoryName = "iamcal/emoji-data";
-    const string BranchName = "a8174c74675355c8c6a9564516b2e961fe7257ef"; // 2024年2月。 Unicode 15.1。
-    //const string BranchName = "0669bda2b9348984eeb4ce66215819bf61c35811"; // 2023年5月。 Unicode 15.0。
-    //const string BranchName = "1ddc9ca67c1379c372b4ca39824659f71caa2825"; // 2022年3月。 Unicode 14.0。
-    //const string BranchName = "675515762babff57a8d9c05f420806f1354203c3"; // 2022年1月。 Unicode 13.1。
-    //const string BranchName = "56e5c532573edc8bdf8b16cb2e750e3cb383ad9d"; // 2021年3月。 Unicode 13.0。
-    //const string BranchName = "cff32eea1d876e4c4a73c87ebc2fa218775de58f"; // 2020年1月。 Unicode 12.1。
 
-    const string EmojiDataSourceUrl = "https://github.com/" + RepositoryName + "/raw/" + BranchName + "/emoji.json";
-    const string CacheFileName = BranchName + ".json";
+    private static string GetEmojiDataSourceUrl(string branchName) => $"https://github.com/{RepositoryName}/raw/{branchName}/emoji.json";
+    private static string GetCacheFileName(string branchName) => $"{branchName}.json";
 
-    public static async ValueTask<byte[]> LoadBytesAsync()
+    public static async ValueTask<byte[]> LoadBytesAsync(string? branchName = null)
     {
-        if (File.Exists(CacheFileName))
+        branchName ??= _branches[0].branchName;
+        var cacheFileName = GetCacheFileName(branchName);
+
+        if (File.Exists(cacheFileName))
         {
             System.Diagnostics.Debug.WriteLine("read from cache");
 
-            return await File.ReadAllBytesAsync(CacheFileName);
+            return await File.ReadAllBytesAsync(cacheFileName);
         }
 
         System.Diagnostics.Debug.WriteLine("read from github");
 
         var c = new HttpClient();
-        var res = await c.GetAsync(EmojiDataSourceUrl);
+        var res = await c.GetAsync(GetEmojiDataSourceUrl(branchName));
         var json = await res.Content.ReadAsByteArrayAsync();
-        await File.WriteAllBytesAsync(CacheFileName, json);
+        await File.WriteAllBytesAsync(cacheFileName, json);
         return json;
     }
 
-    public static async ValueTask<string> LoadStringAsync()
+    public static async ValueTask<string> LoadStringAsync(string? branchName = null)
     {
-        var bytes = await LoadBytesAsync();
+        var bytes = await LoadBytesAsync(branchName);
         return Encoding.UTF8.GetString(bytes);
     }
 
-    public static async ValueTask<JsonDocument> LoadJsonDocAsync()
+    public static async ValueTask<JsonDocument> LoadJsonDocAsync(string? branchName = null)
     {
-        var bytes = await LoadBytesAsync();
+        var bytes = await LoadBytesAsync(branchName);
         return JsonDocument.Parse(bytes);
     }
 }
