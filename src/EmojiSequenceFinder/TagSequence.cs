@@ -96,7 +96,7 @@ namespace RgiSequenceFinder
             // 1F3F4-200D-2620-FE0F (海賊旗)みたいな文字があるけど、それは ZWJ シーケンス判定の方で拾う。
             return new TagSequence(tags, i);
 
-            bool isTagLowSurrogate(char c) => c >= (char)0xDC00 && c <= (char)0xDC7F;
+            static bool isTagLowSurrogate(char c) => c >= (char)0xDC00 && c <= (char)0xDC7F;
         }
 
         /// <summary>
