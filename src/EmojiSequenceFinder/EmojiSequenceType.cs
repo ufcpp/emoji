@@ -1,4 +1,4 @@
-﻿namespace RgiSequenceFinder
+namespace RgiSequenceFinder
 {
     /// <summary>
     /// 絵文字シーケンスの grapheme cluster 分割の種類。

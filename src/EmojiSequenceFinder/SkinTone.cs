@@ -1,4 +1,4 @@
-﻿namespace RgiSequenceFinder
+namespace RgiSequenceFinder
 {
     /// <summary>
     /// 絵文字の肌色。

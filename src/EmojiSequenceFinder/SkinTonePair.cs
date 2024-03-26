@@ -1,4 +1,4 @@
-﻿namespace RgiSequenceFinder
+namespace RgiSequenceFinder
 {
     /// <summary>
     /// RGI 判定において、

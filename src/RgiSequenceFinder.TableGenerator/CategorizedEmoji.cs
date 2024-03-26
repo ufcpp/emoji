@@ -1,4 +1,4 @@
-﻿namespace RgiSequenceFinder.TableGenerator;
+namespace RgiSequenceFinder.TableGenerator;
 
 public struct CategorizedEmoji
 {

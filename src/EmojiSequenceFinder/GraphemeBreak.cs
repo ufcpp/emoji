@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace RgiSequenceFinder
 {
@@ -210,7 +210,7 @@ namespace RgiSequenceFinder
 
                 if (s.Length >= 1 && s[0] == (char)0x200D)
                 {
-                    if(zwjIndex < ZwjSplitResult.MaxLength)
+                    if (zwjIndex < ZwjSplitResult.MaxLength)
                     {
                         span[zwjIndex] = (byte)count;
                         ++zwjIndex;

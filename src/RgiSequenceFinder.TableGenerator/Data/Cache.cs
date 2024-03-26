@@ -1,4 +1,4 @@
-﻿using EmojiData;
+using EmojiData;
 using System.Text.Json;
 
 namespace RgiSequenceFinder.TableGenerator.Data;

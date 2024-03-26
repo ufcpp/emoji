@@ -1,4 +1,4 @@
-﻿using EmojiData;
+using EmojiData;
 
 //HashCode.CheckHashCollision(); return;
 

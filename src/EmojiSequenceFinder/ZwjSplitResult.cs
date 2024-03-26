@@ -1,4 +1,4 @@
-﻿namespace RgiSequenceFinder
+namespace RgiSequenceFinder
 {
     /// <summary>
     /// 書記素分割の際に ZWJ の位置を記録しておいて再探索を要らなくする。

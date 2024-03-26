@@ -1,4 +1,4 @@
-﻿using RgiSequenceFinder.TableGenerator;
+using RgiSequenceFinder.TableGenerator;
 using Xunit;
 
 namespace RgiSequenceFinder.Test;

@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 using System.Text;
 
 namespace EmojiData;
@@ -73,13 +73,13 @@ class Inspector
             .GroupBy(r => r.Value switch
                 {
                     <= 0x80 => 0, // ascii, keycap 用の12文字(0-9 # *)のはず
-                        <= 0x100 => 1, // latin1, copyright と registered の2文字のはず
-                        <= 0x200d => 2, // ZWJ だけ浮いてるはず
-                        <= 0x3300 => 3, // SJIS 由来とか、FE0F を付けた時だけ絵文字化するやつ、2000～3300 辺りにいるはず
-                        <= 0x10000 => 4, // FE0F (異体字セレクター16)だけ浮いてるはず
-                        <= 0x20000 => 5, // キャリア絵文字とかは 1F000 台に全部集まってるはず
-                        _ => 6, // E0000 台の文字(subsivision flags 用のタグ文字)だけ残るはず
-                    })
+                    <= 0x100 => 1, // latin1, copyright と registered の2文字のはず
+                    <= 0x200d => 2, // ZWJ だけ浮いてるはず
+                    <= 0x3300 => 3, // SJIS 由来とか、FE0F を付けた時だけ絵文字化するやつ、2000～3300 辺りにいるはず
+                    <= 0x10000 => 4, // FE0F (異体字セレクター16)だけ浮いてるはず
+                    <= 0x20000 => 5, // キャリア絵文字とかは 1F000 台に全部集まってるはず
+                    _ => 6, // E0000 台の文字(subsivision flags 用のタグ文字)だけ残るはず
+                })
             .OrderBy(g => g.Key))
         {
             var count = 0;

@@ -1,4 +1,4 @@
-﻿using RgiSequenceFinder.TableGenerator;
+using RgiSequenceFinder.TableGenerator;
 
 // 2段コード生成になってる。
 // RgiEmojiSequenceList はそんな複雑なデータでもないんで、こっちも emoji-data.json から直接読み込んでもいいんだけど。

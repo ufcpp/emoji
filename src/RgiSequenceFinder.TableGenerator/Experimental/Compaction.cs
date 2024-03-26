@@ -1,4 +1,4 @@
-﻿using RgiSequenceFinder.TableGenerator.Data;
+using RgiSequenceFinder.TableGenerator.Data;
 using System.Diagnostics;
 using System.Text;
 

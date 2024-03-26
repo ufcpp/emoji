@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace RgiSequenceFinder
 {
@@ -125,7 +125,7 @@ namespace RgiSequenceFinder
             var prevPos = 0;
 
             // ZWJ なしの単体。
-            if(zwjPositions[0] == 0)
+            if (zwjPositions[0] == 0)
             {
                 return ReduceExtends(s, indexes, false);
             }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace RgiSequenceFinder
 {
@@ -63,7 +63,7 @@ namespace RgiSequenceFinder
             _buckets = new Bucket[capacity];
             _mask = capacity - 1;
 
-            if(utf16Length == 1)
+            if (utf16Length == 1)
             {
                 _concatinatedString = null;
 
