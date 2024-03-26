@@ -44,7 +44,7 @@ namespace RgiSequenceFinder
         /// </remarks>
         public ulong LongValue => BinaryPrimitives.ReadUInt64LittleEndian(this.AsSpan());
 
-        public byte this[int index] => this.AsReadOnlySpan()[index];
+        public readonly byte this[int index] => this.AsReadOnlySpan()[index];
 
         public bool Equals(Byte8 other) => LongValue == other.LongValue;
         public override bool Equals(object obj) => obj is Byte8 other && Equals(other);

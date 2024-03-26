@@ -25,7 +25,7 @@ namespace RgiSequenceFinder
         {
             public ushort KeyStart;
             public ushort Index; // Index == 0 は来ない(Keycap #️⃣ に使ってるけど、Keycap は別管理してる)ので これの == 0 で空判定。
-            public bool HasValue => Index != 0;
+            public readonly bool HasValue => Index != 0;
         }
 
         /// <summary>

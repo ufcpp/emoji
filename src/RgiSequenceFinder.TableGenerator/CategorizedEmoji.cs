@@ -1,6 +1,6 @@
 namespace RgiSequenceFinder.TableGenerator;
 
-public struct CategorizedEmoji
+public readonly struct CategorizedEmoji
 {
     /// <summary>
     /// <see cref="EmojiSequenceType.Keycap"/> なやつ。
