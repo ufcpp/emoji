@@ -1,6 +1,7 @@
 using System;
 using System.Buffers.Binary;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 
 namespace RgiSequenceFinder
 {
@@ -56,7 +57,7 @@ namespace RgiSequenceFinder
     // MemoryMarshal を使える。
     internal static class Byte8Extensions
     {
-        public static unsafe Span<byte> AsSpan(ref this Byte8 tags) => new Span<byte>(Unsafe.AsPointer(ref tags.V0), 8);
-        public static unsafe ReadOnlySpan<byte> AsReadOnlySpan(in this Byte8 tags) => new ReadOnlySpan<byte>(Unsafe.AsPointer(ref Unsafe.AsRef(in tags.V0)), 8);
+        public static Span<byte> AsSpan(ref this Byte8 tags) => MemoryMarshal.CreateSpan(ref tags.V0, 8);
+        public static ReadOnlySpan<byte> AsReadOnlySpan(in this Byte8 tags) => MemoryMarshal.CreateReadOnlySpan(ref Unsafe.AsRef(in tags.V0), 8);
     }
 }

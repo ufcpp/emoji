@@ -4,12 +4,6 @@
     <TargetFramework>$(UnityFramework)</TargetFramework>
     <LangVersion>$(UnityLangVersion)</LangVersion>
     <RootNamespace>RgiSequenceFinder</RootNamespace>
-
-    <!--
-    本来要らない unsafe。
-    netstandard2.0 だと MemoryMarshal.CreateSpan が使えないのを unsafe で代用する
-    -->
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
   <ItemGroup>
