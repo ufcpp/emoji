@@ -6,7 +6,7 @@ namespace RgiSequenceFinder
 {
     partial class RgiTable
     {
-        private const int _skinToneFirstIndex = 651;
+        private const int _skinToneFirstIndex = 671;
 
         private static int FindSkinTone(SkinTone skinTone) => _skinToneFirstIndex + (int)skinTone - 1;
     }

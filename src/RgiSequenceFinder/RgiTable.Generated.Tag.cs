@@ -10,9 +10,9 @@ namespace RgiSequenceFinder
         {
             switch (tags.LongValue)
             {
-                case 0x7F676E656267UL: return 642;
-                case 0x7F7463736267UL: return 643;
-                case 0x7F736C776267UL: return 644;
+                case 0x7F676E656267UL: return 662;
+                case 0x7F7463736267UL: return 663;
+                case 0x7F736C776267UL: return 664;
                 default: return -1;
             }
         }
