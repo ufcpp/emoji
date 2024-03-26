@@ -77,7 +77,7 @@ namespace RgiSequenceFinder
         /// 絵文字シーケンス判定を受けなかった1文字。
         /// default が長さ0 (空文字列、文末)を表すのに対してこっちは <see cref="LengthInUtf16"/> が1。
         /// </summary>
-        public static readonly EmojiSequence NotEmoji = new EmojiSequence(EmojiSequenceType.NotEmoji, 1);
+        public static readonly EmojiSequence NotEmoji = new(EmojiSequenceType.NotEmoji, 1);
 
         public void Deconstruct(out EmojiSequenceType type, out int lengthInUtf16) => (type, lengthInUtf16) = (Type, LengthInUtf16);
     }

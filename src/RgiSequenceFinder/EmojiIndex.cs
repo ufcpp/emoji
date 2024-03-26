@@ -29,7 +29,7 @@ namespace RgiSequenceFinder
 
         public EmojiIndex(int index) => _value = index;
 
-        public static implicit operator EmojiIndex(int index) => new EmojiIndex(index);
+        public static implicit operator EmojiIndex(int index) => new(index);
 
         public EmojiIndex(char c) => _value = ~c;
 

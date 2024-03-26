@@ -30,6 +30,6 @@ namespace RgiSequenceFinder
 
         public int Length => _bytes.V6;
 
-        public SkinTonePair SkinTones => new SkinTonePair(_bytes.V7);
+        public SkinTonePair SkinTones => new(_bytes.V7);
     }
 }
