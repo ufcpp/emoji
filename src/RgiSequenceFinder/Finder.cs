@@ -89,8 +89,8 @@ namespace RgiSequenceFinder
                 }
 
                 totalWritten += charWritten;
-                source = source.Slice(read);
-                destination = destination.Slice(charWritten);
+                source = source[read..];
+                destination = destination[charWritten..];
 
                 if (source.Length == 0) break;
             }

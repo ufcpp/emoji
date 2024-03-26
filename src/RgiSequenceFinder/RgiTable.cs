@@ -32,7 +32,7 @@ namespace RgiSequenceFinder
                         // 本来 00A9 FE0F の時だけ絵文字になる 00A9 も絵文字判定する。
                         // ©®‼⁉™〰〽㊗㊙ 辺り、特に©®の2文字(00A9 と 00AE) は逆に特殊対応してでも text/emoji style の出し分けできた方がいいかも。
 
-                        var span = s.Slice(0, emoji.LengthInUtf16);
+                        var span = s[..emoji.LengthInUtf16];
                         var i = FindOther(span, emoji.ZwjPositions);
 
                         if (i >= 0)
@@ -90,7 +90,7 @@ namespace RgiSequenceFinder
                         // ただ、タグ文字を解釈できないときには黒旗だけの表示も認めてそう。
                         //
                         // この実装では黒旗だけの表示をすることにする。
-                        if (i < 0) i = _noSkin1Table.GetValue(s.Slice(0, 2)) ?? -1;
+                        if (i < 0) i = _noSkin1Table.GetValue(s[..2]) ?? -1;
 
                         if (i < 0) return (emoji.LengthInUtf16, 0);
 
@@ -135,13 +135,13 @@ namespace RgiSequenceFinder
                 var pos = zwjPositions[j];
                 if (pos == 0) break;
 
-                var written = ReduceExtends(s.Slice(prevPos, pos - prevPos), indexes, true);
+                var written = ReduceExtends(s[prevPos..pos], indexes, true);
                 totalWritten += written;
-                indexes = indexes.Slice(written);
+                indexes = indexes[written..];
                 prevPos = pos + 1;
             }
 
-            totalWritten += ReduceExtends(s.Slice(prevPos), indexes, true);
+            totalWritten += ReduceExtends(s[prevPos..], indexes, true);
 
             return totalWritten;
         }
@@ -164,7 +164,7 @@ namespace RgiSequenceFinder
             // 間に FEOF が挟まってる場合とかも未サポート。
 
             SkinTone tone = s.Length >= firstChar + 2
-                ? GraphemeBreak.IsSkinTone(s.Slice(firstChar))
+                ? GraphemeBreak.IsSkinTone(s[firstChar..])
                 : 0;
 
             // ZWJ 分割後が普通に skin tone も FE0F も付いてない絵文字なことは多々あるので再検索。

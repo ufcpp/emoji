@@ -187,7 +187,7 @@ namespace RgiSequenceFinder
                 if (pict == 0) break;
 
                 count += pict;
-                s = s.Slice(pict);
+                s = s[pict..];
 
                 while (true)
                 {
@@ -198,12 +198,12 @@ namespace RgiSequenceFinder
                         else tone2 = skinTone;
 
                         count += 2;
-                        s = s.Slice(2);
+                        s = s[2..];
                     }
                     else if (s.Length >= 1 && s[0] == 0xFE0F)
                     {
                         ++count;
-                        s = s.Slice(1);
+                        s = s[1..];
                     }
                     else break;
                 }
@@ -217,7 +217,7 @@ namespace RgiSequenceFinder
                     }
 
                     ++count;
-                    s = s.Slice(1);
+                    s = s[1..];
                 }
                 else break;
             }

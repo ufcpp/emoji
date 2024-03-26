@@ -77,7 +77,7 @@ namespace RgiSequenceFinder
             Byte8 tags = default;
             var tagsSpan = tags.AsSpan();
 
-            s = s.Slice(2);
+            s = s[2..];
 
             while (s.Length >= 2)
             {
@@ -89,7 +89,7 @@ namespace RgiSequenceFinder
                     tagsSpan[i] = (byte)(s[1] - 0xDC00);
                 }
                 ++i;
-                s = s.Slice(2);
+                s = s[2..];
             }
 
             // 🏴 だけあって Tag が付いてないときと、🏴 もない時の区別は多分要らないと思う。
@@ -126,7 +126,7 @@ namespace RgiSequenceFinder
             var sb = new StringBuilder();
             var span = tags.AsSpan();
 
-            foreach (var c in span.Slice(0, tags.V7))
+            foreach (var c in span[..tags.V7])
             {
                 if (c == 0x7f || c == 0) break;
                 sb.Append((char)c);

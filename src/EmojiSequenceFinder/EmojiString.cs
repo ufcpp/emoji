@@ -127,7 +127,7 @@ namespace RgiSequenceFinder
         {
             Span<ushort> buffer = stackalloc ushort[utf16.Length];
             var written = FromUtf16(utf16, buffer);
-            return new EmojiString(buffer.Slice(0, written)).GetHashCode();
+            return new EmojiString(buffer[..written]).GetHashCode();
         }
 
         public bool Equals(EmojiString other) => _data.SequenceEqual(other._data);
@@ -136,7 +136,7 @@ namespace RgiSequenceFinder
         {
             Span<ushort> buffer = stackalloc ushort[utf16.Length];
             var written = FromUtf16(utf16, buffer);
-            return _data.SequenceEqual(buffer.Slice(0, written));
+            return _data.SequenceEqual(buffer[..written]);
         }
 
         public static bool Equals(ReadOnlySpan<ushort> emoji, ReadOnlySpan<char> utf16) => new EmojiString(emoji).Equals(utf16);
